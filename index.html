@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal de bord</title>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161616; --fg: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --hover: #222222; color-scheme: dark; }
+}
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font); }
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px; display: grid; grid-template-columns: 200px 1fr; gap: 40px; }
+@media (max-width: 680px) { .wrap { grid-template-columns: 1fr; gap: 24px; } }
+main { min-width: 0; }
+h1 { font-size: 18px; font-weight: 600; margin: 0 0 20px; }
+h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 20px 0 6px; }
+nav ul { list-style: none; margin: 0; padding: 0; }
+nav li > button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; justify-content: space-between; width: 100%; padding: 3px 6px; margin-left: -6px; }
+nav li > button:hover { background: var(--hover); }
+nav button[aria-current="true"] { font-weight: 600; }
+button:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
+nav .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+nav .empty { color: var(--muted); font-size: 13px; }
+
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.cal-head span { font-size: 13px; }
+.cal-head button { all: unset; cursor: pointer; padding: 0 6px; color: var(--muted); }
+.cal-head button:hover { color: var(--fg); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; font-size: 12px; text-align: center; font-variant-numeric: tabular-nums; max-width: 260px; }
+.cal .wd { color: var(--muted); padding-bottom: 2px; }
+.cal button { all: unset; box-sizing: border-box; padding: 3px 0; color: var(--muted); }
+.cal button.has { color: var(--fg); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.cal button.has:hover { background: var(--hover); }
+.cal button.today { outline: 1px solid var(--line); }
+.cal button[aria-current="true"] { background: var(--fg); color: var(--bg); text-decoration: none; }
+
+.filter { color: var(--muted); font-size: 13px; display: flex; gap: 10px; }
+.filter button { all: unset; cursor: pointer; }
+.filter button:hover { color: var(--fg); text-decoration: underline; }
+.day { font-size: 13px; color: var(--muted); margin: 24px 0 4px; }
+.day:first-child { margin-top: 0; }
+article { padding: 10px 0; border-bottom: 1px solid var(--line); }
+article p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.tag { all: unset; cursor: pointer; }
+.tag:hover { color: var(--fg); text-decoration: underline; }
+.status { color: var(--muted); font-size: 13px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav aria-label="Menu">
+    <h1>Journal de bord</h1>
+    <ul><li><button type="button" id="f-all">Toutes les notes <span class="n" id="count-all"></span></button></li></ul>
+    <h2>Calendrier</h2>
+    <div class="cal-head">
+      <button type="button" id="cal-prev" aria-label="Mois précédent">‹</button>
+      <span id="cal-title"></span>
+      <button type="button" id="cal-next" aria-label="Mois suivant">›</button>
+    </div>
+    <div class="cal" id="cal"></div>
+    <h2>Dates</h2>
+    <ul id="dates"></ul>
+    <h2>Sujets</h2>
+    <ul id="tags-list"></ul>
+  </nav>
+
+  <main>
+    <div class="filter" id="filter" hidden><span id="filter-label"></span><button type="button" id="clear">Tout afficher</button></div>
+    <div id="notes"></div>
+    <div class="status" id="status">Chargement…</div>
+  </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const monthLabel = ym => { const [y,m] = ym.split("-"); return MONTHS[+m-1] + " " + y; };
+const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+
+let notes = [];
+let filter = { kind: "all" };
+let calMonth = today().slice(0,7);
+
+/* ---------- Lecture du fichier notes.md ----------
+   Chaque note commence par « ## AAAA-MM-JJ ».
+   La ligne suivante peut contenir les sujets : #cours #idées
+   Le reste est le texte de la note. Les <!-- commentaires --> sont ignorés. */
+function parse(src) {
+  src = src.replace(/<!--[\s\S]*?-->/g, "");
+  const out = [];
+  const blocks = src.split(/^##\s+/m).slice(1);
+  blocks.forEach((b, i) => {
+    const lines = b.split("\n");
+    const date = (lines.shift().match(/\d{4}-\d{2}-\d{2}/) || [])[0];
+    if (!date) return;
+    let tags = [];
+    while (lines.length && !lines[0].trim()) lines.shift();
+    if (lines.length && /^\s*#\S/.test(lines[0])) {
+      tags = [...new Set((lines.shift().match(/#[^\s#]+/g) || []).map(t => t.slice(1).toLowerCase()))];
+    }
+    const text = lines.join("\n").trim();
+    if (text) out.push({ date, tags, text, order: i });
+  });
+  return out;
+}
+
+async function load() {
+  try {
+    const res = await fetch("notes.md", { cache: "no-store" });
+    if (!res.ok) throw new Error();
+    notes = parse(await res.text());
+    const latest = notes.map(n => n.date).sort().pop();
+    if (latest) calMonth = latest.slice(0,7);
+    render();
+  } catch {
+    $("status").textContent = "Les notes n'ont pas pu être chargées. Rechargez la page.";
+  }
+}
+
+/* ---------- Affichage ---------- */
+function matches(n) {
+  if (filter.kind === "month") return n.date.slice(0,7) === filter.value;
+  if (filter.kind === "day") return n.date === filter.value;
+  if (filter.kind === "tag") return n.tags.includes(filter.value);
+  return true;
+}
+function setFilter(f) { filter = f; if (f.kind === "month") calMonth = f.value; render(); window.scrollTo({ top: 0 }); }
+
+function li(label, count, f, active) {
+  const el = document.createElement("li");
+  const b = document.createElement("button");
+  b.type = "button";
+  b.setAttribute("aria-current", active ? "true" : "false");
+  const s1 = document.createElement("span"); s1.textContent = label;
+  const s2 = document.createElement("span"); s2.className = "n"; s2.textContent = count;
+  b.append(s1, s2);
+  b.onclick = () => setFilter(f);
+  el.appendChild(b);
+  return el;
+}
+
+function renderMenu() {
+  $("count-all").textContent = notes.length;
+  $("f-all").setAttribute("aria-current", filter.kind === "all" ? "true" : "false");
+
+  const months = {};
+  notes.forEach(n => { const m = n.date.slice(0,7); months[m] = (months[m] || 0) + 1; });
+  const dl = $("dates"); dl.replaceChildren();
+  Object.keys(months).sort().reverse().forEach(m =>
+    dl.appendChild(li(monthLabel(m), months[m], { kind:"month", value:m }, filter.kind === "month" && filter.value === m)));
+  if (!dl.children.length) dl.innerHTML = '<li class="empty">Aucune date</li>';
+
+  const tags = {};
+  notes.forEach(n => n.tags.forEach(t => tags[t] = (tags[t] || 0) + 1));
+  const tl = $("tags-list"); tl.replaceChildren();
+  Object.keys(tags).sort((a,b) => a.localeCompare(b, "fr")).forEach(t =>
+    tl.appendChild(li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t)));
+  if (!tl.children.length) tl.innerHTML = '<li class="empty">Aucun sujet</li>';
+}
+
+function shiftMonth(ym, delta) {
+  const [y,m] = ym.split("-").map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+function renderCalendar() {
+  $("cal-title").textContent = monthLabel(calMonth);
+  const counts = {};
+  notes.forEach(n => { if (n.date.startsWith(calMonth)) counts[n.date] = (counts[n.date] || 0) + 1; });
+  const [y,m] = calMonth.split("-").map(Number);
+  const offset = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+  const days = new Date(y, m, 0).getDate();
+  const cal = $("cal"); cal.replaceChildren();
+  ["L","M","M","J","V","S","D"].forEach(w => { const s = document.createElement("span"); s.className = "wd"; s.textContent = w; cal.appendChild(s); });
+  for (let i = 0; i < offset; i++) cal.appendChild(document.createElement("span"));
+  for (let d = 1; d <= days; d++) {
+    const ymd = calMonth + "-" + String(d).padStart(2, "0");
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = d;
+    if (ymd === today()) b.classList.add("today");
+    if (counts[ymd]) {
+      b.classList.add("has");
+      b.title = counts[ymd] + (counts[ymd] > 1 ? " notes" : " note");
+      b.setAttribute("aria-current", filter.kind === "day" && filter.value === ymd ? "true" : "false");
+      b.onclick = () => setFilter({ kind:"day", value:ymd });
+    } else {
+      b.disabled = true;
+    }
+    cal.appendChild(b);
+  }
+}
+
+function renderNotes() {
+  const list = notes.filter(matches).sort((a,b) => b.date.localeCompare(a.date) || a.order - b.order);
+  const box = $("notes"); box.replaceChildren();
+
+  $("filter").hidden = filter.kind === "all";
+  $("filter-label").textContent = filter.kind === "month" ? "Notes de " + monthLabel(filter.value)
+    : filter.kind === "day" ? "Notes du " + dayLabel(filter.value)
+    : filter.kind === "tag" ? "Sujet : " + filter.value : "";
+  if (filter.kind !== "all") box.style.marginTop = "16px"; else box.style.marginTop = "";
+
+  let lastDay = null;
+  list.forEach(n => {
+    if (n.date !== lastDay) {
+      const h = document.createElement("div"); h.className = "day"; h.textContent = dayLabel(n.date);
+      box.appendChild(h); lastDay = n.date;
+    }
+    const a = document.createElement("article");
+    const p = document.createElement("p"); p.textContent = n.text; a.appendChild(p);
+    if (n.tags.length) {
+      const meta = document.createElement("div"); meta.className = "meta";
+      n.tags.forEach(t => {
+        const b = document.createElement("button"); b.type = "button"; b.className = "tag"; b.textContent = "#" + t;
+        b.onclick = () => setFilter({ kind:"tag", value:t });
+        meta.appendChild(b);
+      });
+      a.appendChild(meta);
+    }
+    box.appendChild(a);
+  });
+
+  $("status").textContent = list.length ? "" : notes.length ? "Aucune note pour ce filtre." : "Aucune note pour l'instant.";
+}
+
+function render() { renderMenu(); renderCalendar(); renderNotes(); }
+
+$("f-all").onclick = () => setFilter({ kind:"all" });
+$("clear").onclick = () => setFilter({ kind:"all" });
+$("cal-prev").onclick = () => { calMonth = shiftMonth(calMonth, -1); renderCalendar(); };
+$("cal-next").onclick = () => { calMonth = shiftMonth(calMonth, 1); renderCalendar(); };
+
+load();
+</script>
+</body>
+</html>

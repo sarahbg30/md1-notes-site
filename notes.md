@@ -15,5 +15,9 @@
 -->
 
 ## 2026-10-10
-#exemple
-Note d'exemple : remplacez-la par votre première vraie note.
+#artist
+J'ai décpuvert le travail de
+
+## 2026-10-09
+#thesis
+Le thesis de Lise Mendes, super bien structuré.

@@ -45,6 +45,7 @@ nav .empty { color: var(--muted); font-size: 13px; }
 .day:first-child { margin-top: 0; }
 article { padding: 10px 0; border-bottom: 1px solid var(--line); }
 article p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+article a { color: inherit; text-underline-offset: 2px; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 13px; color: var(--muted); }
 .tag { all: unset; cursor: pointer; }
 .tag:hover { color: var(--fg); text-decoration: underline; }
@@ -101,13 +102,24 @@ function parse(src) {
     if (!date) return;
     let tags = [];
     while (lines.length && !lines[0].trim()) lines.shift();
-    if (lines.length && /^\s*#\S/.test(lines[0])) {
-      tags = [...new Set((lines.shift().match(/#[^\s#]+/g) || []).map(t => t.slice(1).toLowerCase()))];
+    // Ligne des sujets : elle commence par #, chaque mot est un sujet
+    // (« #artiste installation », « #artiste #installation » et « #artiste, installation » marchent tous)
+    if (lines.length && /^\s*#[^\s#]/.test(lines[0])) {
+      tags = [...new Set(lines.shift().split(/[\s,#]+/).filter(Boolean).map(t => t.toLowerCase()))];
     }
     const text = lines.join("\n").trim();
     if (text) out.push({ date, tags, text, order: i });
   });
   return out;
+}
+
+/* Mise en forme simple du texte : [lien](https://…), **gras**, *italique* */
+function inline(text) {
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return esc(text.replace(/\n{3,}/g, "\n\n"))
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
 }
 
 async function load() {
@@ -213,7 +225,7 @@ function renderNotes() {
       box.appendChild(h); lastDay = n.date;
     }
     const a = document.createElement("article");
-    const p = document.createElement("p"); p.textContent = n.text; a.appendChild(p);
+    const p = document.createElement("p"); p.innerHTML = inline(n.text); a.appendChild(p);
     if (n.tags.length) {
       const meta = document.createElement("div"); meta.className = "meta";
       n.tags.forEach(t => {

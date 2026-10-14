@@ -46,6 +46,7 @@ nav .empty { color: var(--muted); font-size: 13px; }
 article { padding: 10px 0; border-bottom: 1px solid var(--line); }
 article p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 article a { color: inherit; text-underline-offset: 2px; }
+article img { display: block; max-width: 100%; height: auto; margin: 4px 0; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 13px; color: var(--muted); }
 .tag { all: unset; cursor: pointer; }
 .tag:hover { color: var(--fg); text-decoration: underline; }
@@ -113,10 +114,11 @@ function parse(src) {
   return out;
 }
 
-/* Mise en forme simple du texte : [lien](https://…), **gras**, *italique* */
+/* Mise en forme simple du texte : ![image](images/photo.jpg), [lien](https://…), **gras**, *italique* */
 function inline(text) {
   const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   return esc(text.replace(/\n{3,}/g, "\n\n"))
+    .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|[\w-][\w.\/%-]*)\)/g, '<img src="$2" alt="$1" loading="lazy">')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
     .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");

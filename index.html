@@ -94,9 +94,10 @@ let calMonth = today().slice(0,7);
    La ligne suivante peut contenir les sujets : #cours #idées
    Le reste est le texte de la note. Les <!-- commentaires --> sont ignorés. */
 function parse(src) {
-  src = src.replace(/<!--[\s\S]*?-->/g, "");
+  src = src.replace(/<!--[\s\S]*?-->/g, "").replace(/[\uFEFF\u200B]/g, "");
   const out = [];
-  const blocks = src.split(/^##\s+/m).slice(1);
+  // Une note commence par « ## » (ou « ### ») suivi de la date
+  const blocks = src.split(/^#{2,}[ \t]*(?=\d{4}-\d{2}-\d{2})/m).slice(1);
   blocks.forEach((b, i) => {
     const lines = b.split("\n");
     const date = (lines.shift().match(/\d{4}-\d{2}-\d{2}/) || [])[0];
@@ -106,10 +107,15 @@ function parse(src) {
     // Ligne des sujets : elle commence par #, chaque mot est un sujet
     // (« #artiste installation », « #artiste #installation » et « #artiste, installation » marchent tous)
     if (lines.length && /^\s*#[^\s#]/.test(lines[0])) {
-      tags = [...new Set(lines.shift().split(/[\s,#]+/).filter(Boolean).map(t => t.toLowerCase()))];
+      tags = lines.shift().split(/[\s,#]+/).filter(Boolean);
     }
     const text = lines.join("\n").trim();
     if (text) out.push({ date, tags, text, order: i });
+  });
+  // Majuscules gardées ; « #Artist » et « #artist » restent le même sujet (écrit comme la 1re fois)
+  const spelling = {};
+  out.forEach(n => {
+    n.tags = [...new Set(n.tags.map(t => spelling[t.toLowerCase()] ??= t))];
   });
   return out;
 }

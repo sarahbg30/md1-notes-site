@@ -27,7 +27,7 @@ The Foundation for Art and Creative Technology (FACT) is the UK's leading centre
 
 
 ## 2026-10-09
-#thesis #alumni
+#thesis #alumni #VJing
 Lise Mendes's Thesis "VJing through social media".
 
 I feel the structure is really clear and so it's easy to navigate.
@@ -38,7 +38,7 @@ Notes on Wendy Chun based on this article : [*Data Segregation and Algorithmic A
 
 ## 2026-10-14
 
-#artist #theory
+#artist #theory #Joel-Vacheron
 Joel Vacheron, conference, *Unseeing Space Imagery*
 
 Their work published in a book *Cosmovision*
@@ -64,10 +64,12 @@ Imagery is never neutral
 ## 2026-10-14
 
 #thesis #advice
-What are the parameters is chose to be interesting to conduct my research.
+What are the parameters I want to choose to conduct my research.
 
 ## 2026-10-07
-#thesis #alumni Faustine Perillaud, Mapping electronic reappropiation 2023-2024
+#thesis #alumni #Electronic-Reapropriation
+
+Faustine Perillaud, Mapping electronic reapropiation 2023-2024
 
 Table of contents
 
@@ -114,3 +116,29 @@ Unbinare Lab "Dead bug"
 
 This thesis is auto-biographic with their relationship to the subject, how they encountered this, some context, and it's also an inventory of what has been done in the field of electronic reapropriation.
 I would say mostly chronological.
+
+## 2026-10-14
+#artist
+Trevor Paglen, The Last Picture
+
+[Creating a mirror to engineer Earth](https://www.reflectorbital.com)
+
+## 2026-10-13
+#artist #theory #Wendy-Chun
+
+Discriminating Data: Individuals, Neighborhoods, Proxies
+
+Professor Chun began her talk at the 2019 Congress by outlining the five-step pro-
+gram that defines Discriminating Data:
+
+1. Expose and investigate how ignoring differences amplifies discrimination, both currently and historically. (The dangers of hopeful ignorance.)
+2. ﻿﻿﻿Interrogate the default assumptions and axioms that ground algorithms and data structures. (Eugenics and U.S. segregation as embedded within current network axioms.)
+3. Apprehend the future machine-learning algorithms put in place, focusing on when, why, and how their predictions work.
+4. Use existing artificial intelligence (AI) systems to diagnose current in-equalities; corralling discriminatory predictions as evidence of current and historical forms of discrimination.
+
+### 2026-10-14
+#theory #artist #James-Bridle
+
+[Ways of Being, James Bridle, 2022](https://jamesbridle.com/books/ways-of-being)
+
+[New Dark Age, James Bridle, 2018](https://jamesbridle.com/books/new-dark-age)

@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Journal de bord</title>
+<title>Logbook</title>
 <style>
 :root {
   --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3;
@@ -56,34 +56,34 @@ article img { display: block; max-width: 100%; height: auto; margin: 4px 0; }
 <body>
 <div class="wrap">
   <nav aria-label="Menu">
-    <h1>Journal de bord</h1>
-    <ul><li><button type="button" id="f-all">Toutes les notes <span class="n" id="count-all"></span></button></li></ul>
-    <h2>Calendrier</h2>
+    <h1>Logbook</h1>
+    <ul><li><button type="button" id="f-all">All notes <span class="n" id="count-all"></span></button></li></ul>
+    <h2>Calendar</h2>
     <div class="cal-head">
-      <button type="button" id="cal-prev" aria-label="Mois précédent">‹</button>
+      <button type="button" id="cal-prev" aria-label="Previous month">‹</button>
       <span id="cal-title"></span>
-      <button type="button" id="cal-next" aria-label="Mois suivant">›</button>
+      <button type="button" id="cal-next" aria-label="Next month">›</button>
     </div>
     <div class="cal" id="cal"></div>
     <h2>Dates</h2>
     <ul id="dates"></ul>
-    <h2>Sujets</h2>
+    <h2>Topics</h2>
     <ul id="tags-list"></ul>
   </nav>
 
   <main>
-    <div class="filter" id="filter" hidden><span id="filter-label"></span><button type="button" id="clear">Tout afficher</button></div>
+    <div class="filter" id="filter" hidden><span id="filter-label"></span><button type="button" id="clear">Show all</button></div>
     <div id="notes"></div>
-    <div class="status" id="status">Chargement…</div>
+    <div class="status" id="status">Loading…</div>
   </main>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
 const monthLabel = ym => { const [y,m] = ym.split("-"); return MONTHS[+m-1] + " " + y; };
-const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
 
 let notes = [];
 let filter = { kind: "all" };
@@ -139,7 +139,7 @@ async function load() {
     if (latest) calMonth = latest.slice(0,7);
     render();
   } catch {
-    $("status").textContent = "Les notes n'ont pas pu être chargées. Rechargez la page.";
+    $("status").textContent = "The notes could not be loaded. Please reload the page.";
   }
 }
 
@@ -174,14 +174,14 @@ function renderMenu() {
   const dl = $("dates"); dl.replaceChildren();
   Object.keys(months).sort().reverse().forEach(m =>
     dl.appendChild(li(monthLabel(m), months[m], { kind:"month", value:m }, filter.kind === "month" && filter.value === m)));
-  if (!dl.children.length) dl.innerHTML = '<li class="empty">Aucune date</li>';
+  if (!dl.children.length) dl.innerHTML = '<li class="empty">No dates yet</li>';
 
   const tags = {};
   notes.forEach(n => n.tags.forEach(t => tags[t] = (tags[t] || 0) + 1));
   const tl = $("tags-list"); tl.replaceChildren();
   Object.keys(tags).sort((a,b) => a.localeCompare(b, "fr")).forEach(t =>
     tl.appendChild(li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t)));
-  if (!tl.children.length) tl.innerHTML = '<li class="empty">Aucun sujet</li>';
+  if (!tl.children.length) tl.innerHTML = '<li class="empty">No topics yet</li>';
 }
 
 function shiftMonth(ym, delta) {
@@ -197,7 +197,7 @@ function renderCalendar() {
   const offset = (new Date(y, m - 1, 1).getDay() + 6) % 7;
   const days = new Date(y, m, 0).getDate();
   const cal = $("cal"); cal.replaceChildren();
-  ["L","M","M","J","V","S","D"].forEach(w => { const s = document.createElement("span"); s.className = "wd"; s.textContent = w; cal.appendChild(s); });
+  ["M","T","W","T","F","S","S"].forEach(w => { const s = document.createElement("span"); s.className = "wd"; s.textContent = w; cal.appendChild(s); });
   for (let i = 0; i < offset; i++) cal.appendChild(document.createElement("span"));
   for (let d = 1; d <= days; d++) {
     const ymd = calMonth + "-" + String(d).padStart(2, "0");
@@ -221,9 +221,9 @@ function renderNotes() {
   const box = $("notes"); box.replaceChildren();
 
   $("filter").hidden = filter.kind === "all";
-  $("filter-label").textContent = filter.kind === "month" ? "Notes de " + monthLabel(filter.value)
-    : filter.kind === "day" ? "Notes du " + dayLabel(filter.value)
-    : filter.kind === "tag" ? "Sujet : " + filter.value : "";
+  $("filter-label").textContent = filter.kind === "month" ? "Notes from " + monthLabel(filter.value)
+    : filter.kind === "day" ? "Notes from " + dayLabel(filter.value)
+    : filter.kind === "tag" ? "Topic: " + filter.value : "";
   if (filter.kind !== "all") box.style.marginTop = "16px"; else box.style.marginTop = "";
 
   let lastDay = null;
@@ -246,7 +246,7 @@ function renderNotes() {
     box.appendChild(a);
   });
 
-  $("status").textContent = list.length ? "" : notes.length ? "Aucune note pour ce filtre." : "Aucune note pour l'instant.";
+  $("status").textContent = list.length ? "" : notes.length ? "No notes match this filter." : "No notes yet.";
 }
 
 function render() { renderMenu(); renderCalendar(); renderNotes(); }

@@ -136,9 +136,82 @@ gram that defines Discriminating Data:
 3. Apprehend the future machine-learning algorithms put in place, focusing on when, why, and how their predictions work.
 4. Use existing artificial intelligence (AI) systems to diagnose current in-equalities; corralling discriminatory predictions as evidence of current and historical forms of discrimination.
 
-### 2026-10-14
+## 2026-10-14
 #theory #artist #James-Bridle
 
 [Ways of Being, James Bridle, 2022](https://jamesbridle.com/books/ways-of-being)
 
 [New Dark Age, James Bridle, 2018](https://jamesbridle.com/books/new-dark-age)
+
+## 2026-10-14
+
+Wendy Chun conference, Data Fluencies
+
+Naomi Astra Klen Taylor, End Times Fascism, 2026
+
+Dystopian sci-fi, bunkers, cyberpunk
+
+AGI become the most conspirationnal
+
+They were conviced that AI will destroy the world, they want to accomplish the prophecy
+Long termism
+
+Wether or not it will happen, we dont yet know what human intelligence is
+
+Atlas of AI Kate Crawford
+The AI Con
+
+Intelligence and language are already artificial but what we really want to avoid is an autoritarian system
+
+Digital democracies institute at Simon Fraser University
+
+They needed to respond to crisis, why and how algorithm discriminates
+segregation by algorithm structures
+
+Election of both fake news and Authenticity (Trump)
+
+A way to understand personalized feeds
+A global picture of social media trends
+Case studies of past events
+
+The researchers don't want to replicate the surveillance
+
+COVID-19 test tool, 
+
+Conflict can be a good sign
+
+Groups are so polarized they're no longer talking to each other
+
+Data literracy - follow the rules
+Data fluencies - create speak move things articulate
+
+Even when something is true, does it matter ?
+
+Humanities and AI
+Cartographer's tool
+
+Influence functions, the way climate change IA predictions works
+
+Technical Defaults are cultural defaults
+
+Homophily creates networks echo chambers (entre soi, bulle de filtres)
+Homophily makes that we repell each other but also attract each other
+
+We need to have gaps to make the networks connections
+
+Data Visceralization
+
+When data shapes our bodies and borders
+
+Kelly Dobson 
+Parapraxis of machine design and use
+
+We communicate because we're separation 
+
+Designing communication is designing separation
+
+Blendie, performance, 2003
+
+Companion projects
+
+Questions

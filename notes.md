@@ -237,7 +237,7 @@ Kikk (https://kikkfestival.be) (be)
 
 [Robin Baugmarten](https://www.wobblylabs.com) 
 
-[Memo Akten]()
+Memo Akten
 
 ### [Danielle Brathwaite-Shirley](https://www.daniellebrathwaiteshirley.com) - artiste multimédia playing with reality and queerness monstrous 
 
@@ -246,4 +246,64 @@ Kikk (https://kikkfestival.be) (be)
 #theory
 
 Epistemology is the branch of philosophy that studies the nature, origin, scope, and limits of human knowledge.
+
+## 2026-10-21
+#conference #LauraFerrarello #theory #ethics
+
+Architecture, EPFL, Design innovation and ethics special interest in AI
+
+Discipline of the future
+
+### Engaging Design: Tools for Design Practices Urging New Forms of Citizenships Laura Ferrarello
+
+AI-informed Design - technology needs data collected from OUR human interactions
+
+Health app - health insurance, body shape, everyday habit, mental health, social status, wellness products
+
+Ethical challenges in AI-informed design, Agency, Dependancy, Cultural Misrepresentation, Limited expression
+
+Because everything relies on data without knowing wether its good or bad info
+
+From ethical challenges to ethical opportunities to challenge assumptions, increase awareness, developp new attitudes and procedures
+
+How to respond to these challenges ?
+
+[Ofri Cnaani](https://ofricnaani.com/Statistical-Bodies)
+
+![Ofri Cnaani](images/You_are_my_statistical_body_final_small.jpg)
+
+Using question to tackle ethical challenges ?
+- being aware of the knowledge we have
+- our brain is lazy, we take things for granted
+- learning consumes energy
+- re-learn make us able to change perspective
+
+The idk is also important, unpack what we think we know
+
+Framing:trade-off V dilemmas
+
+- A dilemma is a standoff between two imperatives perceived as equally compulsory but not achievable
+
+Separate responses - deconstruct the incompatibility of responses in their defining components - can I prioritize ? time sequence ? compartmentalise ?
+
+- A trade-off is understood as a balancing of two imperatives perceived as can be transformed
+
+Reframing my reponses by exploring different attitudes- seek to resolve incompatibilty - can this tension help me rethink ? is there an alternative way ? change of scale help to find a solution ?
+
+How to navigate situations of no apparent solutions ?
+
+- change perceptions of : ideas, practices, narratives, habits, goals, values, emotions and beliefs
+
+Wicked problems are ill-formulated, whose info is confusing, conflicting values
+
+Perspectives are intertwined : economy, health, social, politics (data privacy)
+
+Balancing loops
+
+Ethics needs to share responsability : designer + psychologist, cultural theorist, behavioural scientist, computer scientist, social scientist, anthropologist
+
+Multiple perspectives, multi disciplinary, collective work
+
+![Laura Ferrarello](images/lauraferrarello.JPG)
+![Laura Ferrarello](images/lauraferrarello2.jpg)
 

@@ -145,7 +145,8 @@ gram that defines Discriminating Data:
 
 ## 2026-10-14
 
-Wendy Chun conference, Data Fluencies
+#WendyChun #conference
+Data Fluencies
 
 Naomi Astra Klen Taylor, End Times Fascism, 2026
 
@@ -215,3 +216,34 @@ Blendie, performance, 2003
 Companion projects
 
 Questions
+
+
+## 2026-10-19
+
+#festivals
+
+[Chroniques](https://chroniques.org) (fr)
+
+Kikk (https://kikkfestival.be) (be)
+
+[Ars Electonica](https://ars.electronica.art) (au) 
+
+[Encor Studio](https://www.encor.studio) - Immersive installations, projecting on opaque glass
+
+## 2026-10-19
+#artists
+
+[Lauren Thiel](https://thiel.page/magic-house/) - collective drawing space on wheels
+
+[Robin Baugmarten](https://www.wobblylabs.com) 
+
+[Memo Akten]()
+
+### [Danielle Brathwaite-Shirley](https://www.daniellebrathwaiteshirley.com) - artiste multimédia playing with reality and queerness monstrous 
+
+
+## 2026-10-19
+#theory
+
+Epistemology is the branch of philosophy that studies the nature, origin, scope, and limits of human knowledge.
+

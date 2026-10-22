@@ -306,3 +306,8 @@ Multiple perspectives, multi disciplinary, collective work
 
 ![Laura Ferrarello](images/lauraferrarello.JPG)
 ![Laura Ferrarello](images/lauraferrarello2.jpg)
+
+## 2026-10-22
+#CreativeCode #RafaëlRozendaal
+
+Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozendaal](https://www.newrafael.com/internet)

@@ -51,7 +51,8 @@ code { font-size: 13px; }
 .item .top { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--muted); }
 .item .excerpt { margin: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .item .acts { display: flex; gap: 12px; }
-.item .confirm { font-size: 13px; display: flex; gap: 12px; flex-wrap: wrap; }
+.item .confirm, .confirm-save { font-size: 13px; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.confirm-save span, .item .confirm span { color: var(--fg); }
 [hidden] { display: none !important; }
 
 /* Téléphone : champs en 16px (évite le zoom automatique de l'iPhone), boutons plus faciles à toucher */
@@ -66,7 +67,7 @@ code { font-size: 13px; }
   button.link, .chips button { padding: 6px 0; }
   header button.link { padding: 0; }
   .chips { gap: 2px 14px; }
-  .item .acts, .item .confirm { gap: 20px; }
+  .item .acts, .item .confirm, .confirm-save { gap: 6px 20px; }
 }
 </style>
 </head>
@@ -103,6 +104,11 @@ code { font-size: 13px; }
     <div class="actions">
       <button type="button" class="btn" id="publish">Publish</button>
       <button type="button" class="link" id="clear">Clear the form</button>
+    </div>
+    <div class="confirm-save" id="confirm-save" hidden>
+      <span>Are you sure you want to save the changes to this note?</span>
+      <button type="button" class="link" id="confirm-yes">Yes, save</button>
+      <button type="button" class="link" id="confirm-no">Cancel</button>
     </div>
     <div class="status" id="status" role="status"></div>
   </section>
@@ -263,7 +269,7 @@ function renderList() {
 
     if (confirmDelete === n.raw) {
       const c = document.createElement("div"); c.className = "confirm";
-      const q = document.createElement("span"); q.textContent = "Delete this note from the site?";
+      const q = document.createElement("span"); q.textContent = "Are you sure you want to delete this note?";
       c.append(q, link("Yes, delete", () => removeNote(n)), link("Cancel", () => { confirmDelete = null; renderList(); }));
       it.appendChild(c);
     } else {
@@ -318,7 +324,7 @@ function startEdit(n) {
   window.scrollTo({ top: 0 }); $("text").focus();
 }
 function stopEdit() {
-  editing = null;
+  editing = null; askSave(false);
   $("editing").hidden = true; $("publish").textContent = "Publish"; $("clear").hidden = false;
   pending = []; renderFiles(); loadDraft(); renderList();
 }
@@ -396,10 +402,24 @@ function renderFiles() {
 }
 
 /* ---------- Publier (nouvelle note) ou enregistrer (note modifiée) ---------- */
-$("publish").onclick = async () => {
+function checkForm() {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test($("date").value)) { setStatus("Choose a date.", true); return false; }
+  if (!$("text").value.trim()) { setStatus("Write something before publishing.", true); return false; }
+  return true;
+}
+// Note modifiée : on demande confirmation avant d'enregistrer
+function askSave(open) { $("confirm-save").hidden = !open; $("publish").parentElement.hidden = open; }
+$("publish").onclick = () => {
+  if (!checkForm()) return;
+  if (editing) { setStatus(""); askSave(true); return; }
+  publish();
+};
+$("confirm-yes").onclick = () => { askSave(false); publish(); };
+$("confirm-no").onclick = () => askSave(false);
+
+async function publish() {
+  if (!checkForm()) return;
   const date = $("date").value, text = $("text").value.trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return setStatus("Choose a date.", true);
-  if (!text) return setStatus("Write something before publishing.", true);
   const block = makeBlock(date, canonical($("topics").value), text);
   const images = pending.filter(p => text.includes(p.path));
   const firstLine = text.split("\n")[0].replace(/[#*\[\]()!]/g, "").slice(0, 60);
@@ -428,7 +448,7 @@ $("publish").onclick = async () => {
     setStatus(explain(e), true);
   }
   $("publish").disabled = false;
-};
+}
 
 $("clear").onclick = () => {
   $("text").value = ""; $("topics").value = ""; $("date").value = today();

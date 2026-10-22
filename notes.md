@@ -66,7 +66,7 @@ Imagery is never neutral
 What are the parameters I want to choose to conduct my research.
 
 ## 2026-10-07
-#thesis #alumni #Electronic-Reapropriation
+#thesis #alumni #ElectronicReapropriation
 
 Faustine Perillaud, Mapping electronic reapropiation 2023-2024
 

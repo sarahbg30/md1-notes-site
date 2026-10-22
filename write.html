@@ -61,16 +61,10 @@ code { font-size: 13px; }
     <div class="links"><a href="./">View the site</a><button type="button" class="link" id="logout" hidden>Log out</button></div>
   </header>
 
-  <!-- 1re fois : coller la clé GitHub -->
+  <!-- Sans clé : simple message. Champ de la clé seulement sur write.html#connect -->
+  <p class="hint" id="private" hidden>This page is private. <a href="./">Read the logbook</a>.</p>
+
   <section id="setup" hidden>
-    <h2>Connect to GitHub</h2>
-    <p class="hint">Paste your GitHub access key once on this device. It is stored only in this browser.</p>
-    <ol>
-      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
-      <li>Repository access: <b>Only select repositories</b> → <code>md1-notes-site</code>.</li>
-      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>.</li>
-      <li>Generate the key, copy it and paste it here.</li>
-    </ol>
     <label>Access key<input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
     <div class="actions"><button type="button" class="btn" id="save-token">Connect</button></div>
     <div class="status error" id="setup-error"></div>
@@ -217,7 +211,8 @@ $("logout").onclick = () => { store.del(KEY_TOKEN); show(); };
 
 function show() {
   const has = !!store.get(KEY_TOKEN);
-  $("setup").hidden = has; $("editor").hidden = !has; $("list").hidden = !has; $("logout").hidden = !has;
+  const connect = location.hash === "#connect";
+  $("setup").hidden = has || !connect; $("private").hidden = has || connect; $("editor").hidden = !has; $("list").hidden = !has; $("logout").hidden = !has;
   if (has) loadSource();
 }
 

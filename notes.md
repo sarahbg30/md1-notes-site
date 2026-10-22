@@ -308,3 +308,5 @@ Multiple perspectives, multi disciplinary, collective work
 #CreativeCode #RafaëlRozendaal
 
 Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozendaal](https://www.newrafael.com/internet).
+
+![RafaëlRozendaal](images/2026-10-22-rafaelrozendaal-bnmd.jpg)

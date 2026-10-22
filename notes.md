@@ -123,7 +123,7 @@ Trevor Paglen, The Last Picture
 [Creating a mirror to engineer Earth](https://www.reflectorbital.com)
 
 ## 2026-10-13
-#artist #theory #Wendy-Chun
+#artist #theory #WendyChun
 
 Discriminating Data: Individuals, Neighborhoods, Proxies
 
@@ -131,7 +131,7 @@ Professor Chun began her talk at the 2019 Congress by outlining the five-step pr
 gram that defines Discriminating Data:
 
 1. Expose and investigate how ignoring differences amplifies discrimination, both currently and historically. (The dangers of hopeful ignorance.)
-2. ﻿﻿﻿Interrogate the default assumptions and axioms that ground algorithms and data structures. (Eugenics and U.S. segregation as embedded within current network axioms.)
+2. Interrogate the default assumptions and axioms that ground algorithms and data structures. (Eugenics and U.S. segregation as embedded within current network axioms.)
 3. Apprehend the future machine-learning algorithms put in place, focusing on when, why, and how their predictions work.
 4. Use existing artificial intelligence (AI) systems to diagnose current in-equalities; corralling discriminatory predictions as evidence of current and historical forms of discrimination.
 

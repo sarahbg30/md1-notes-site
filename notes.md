@@ -36,8 +36,8 @@ I feel the structure is really clear and so it's easy to navigate.
 Notes on Wendy Chun based on this article : [*Data Segregation and Algorithmic Amplification: A Conversation with Wendy Hui Kyong Chun*](https://www.researchgate.net/publication/335875650_Data_Segregation_and_Algorithmic_Amplification_A_Conversation_with_Wendy_Hui_Kyong_Chun) and this video : [*How are machine learning algorithms driving polarisation? by The British Academy*](https://youtu.be/AK_zNivJLMk?si=kdkFQ_X2Y7SjhfMy).
 
 ## 2026-10-14
+#artist #theory #JoelVacheron
 
-#artist #theory #Joel-Vacheron
 Joel Vacheron, conference, *Unseeing Space Imagery*
 
 Their work published in a book *Cosmovision*

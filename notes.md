@@ -136,7 +136,7 @@ gram that defines Discriminating Data:
 4. Use existing artificial intelligence (AI) systems to diagnose current in-equalities; corralling discriminatory predictions as evidence of current and historical forms of discrimination.
 
 ## 2026-10-14
-#theory #artist #James-Bridle
+#theory #artist #JamesBridle
 
 [Ways of Being, James Bridle, 2022](https://jamesbridle.com/books/ways-of-being)
 

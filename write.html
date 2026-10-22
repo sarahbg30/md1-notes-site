@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Logbook · Write</title>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3; --error: #b3261e;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161616; --fg: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --hover: #222222; --error: #f2b8b5; color-scheme: dark; }
+}
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font); }
+.wrap { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+h1 { font-size: 18px; font-weight: 600; margin: 0; }
+h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; }
+a { color: inherit; text-underline-offset: 2px; }
+.links { display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
+section { display: grid; gap: 10px; }
+label { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+input, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 6px 8px; width: 100%; box-sizing: border-box; }
+textarea { min-height: 260px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > label { flex: 1; min-width: 160px; }
+.row > label.date { flex: 0 0 auto; min-width: 0; }
+button.btn { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--fg); padding: 5px 14px; cursor: pointer; }
+button.btn:disabled { opacity: .5; cursor: default; }
+button.link { all: unset; cursor: pointer; color: var(--muted); font-size: 13px; }
+button.link:hover { color: var(--fg); text-decoration: underline; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; }
+.chips button { all: unset; cursor: pointer; color: var(--muted); }
+.chips button:hover { color: var(--fg); text-decoration: underline; }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.files { font-size: 13px; color: var(--muted); display: grid; gap: 2px; }
+.actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.status { font-size: 13px; color: var(--muted); min-height: 1.5em; }
+.status.error { color: var(--error); }
+.editing { font-size: 13px; display: flex; gap: 10px; flex-wrap: wrap; padding: 6px 0; border-bottom: 1px solid var(--line); }
+ol { margin: 0; padding-left: 20px; font-size: 13px; color: var(--muted); }
+code { font-size: 13px; }
+
+#list { margin-top: 40px; gap: 0; }
+#list h2 { margin-bottom: 4px; }
+.item { padding: 10px 0; border-bottom: 1px solid var(--line); display: grid; gap: 4px; min-width: 0; }
+.item.current { opacity: .45; }
+.item .top { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--muted); }
+.item .excerpt { margin: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item .acts { display: flex; gap: 12px; }
+.item .confirm { font-size: 13px; display: flex; gap: 12px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Logbook · Write</h1>
+    <div class="links"><a href="./">View the site</a><button type="button" class="link" id="logout" hidden>Log out</button></div>
+  </header>
+
+  <!-- 1re fois : coller la clé GitHub -->
+  <section id="setup" hidden>
+    <h2>Connect to GitHub</h2>
+    <p class="hint">Paste your GitHub access key once on this device. It is stored only in this browser.</p>
+    <ol>
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+      <li>Repository access: <b>Only select repositories</b> → <code>md1-notes-site</code>.</li>
+      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>.</li>
+      <li>Generate the key, copy it and paste it here.</li>
+    </ol>
+    <label>Access key<input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+    <div class="actions"><button type="button" class="btn" id="save-token">Connect</button></div>
+    <div class="status error" id="setup-error"></div>
+  </section>
+
+  <!-- Formulaire de note -->
+  <section id="editor" hidden>
+    <div class="editing" id="editing" hidden><span id="editing-label"></span><button type="button" class="link" id="cancel-edit">Cancel editing</button></div>
+    <div class="row">
+      <label class="date">Date<input type="date" id="date"></label>
+      <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
+    </div>
+    <div class="chips" id="known-topics" aria-label="Existing topics"></div>
+    <label>Note<textarea id="text" placeholder="Write your note…"></textarea></label>
+    <p class="hint">Links: <code>[title](https://…)</code> · italic: <code>*text*</code> · bold: <code>**text**</code> · heading: <code>### text</code></p>
+    <div class="row">
+      <label>Images<input type="file" id="images" accept="image/*" multiple></label>
+    </div>
+    <div class="files" id="files"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="publish">Publish</button>
+      <button type="button" class="link" id="clear">Clear the form</button>
+    </div>
+    <div class="status" id="status" role="status"></div>
+  </section>
+
+  <!-- Notes publiées -->
+  <section id="list" hidden>
+    <h2>Published notes</h2>
+    <div id="items"><p class="hint">Loading…</p></div>
+  </section>
+</div>
+
+<script>
+const OWNER = "sarahbg30", REPO = "md1-notes-site", BRANCH = "main";
+const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+const KEY_TOKEN = "logbook-token", KEY_DRAFT = "logbook-draft";
+const $ = id => document.getElementById(id);
+
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} }
+};
+const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+
+function setStatus(msg, isError) { $("status").textContent = msg; $("status").classList.toggle("error", !!isError); }
+
+/* ---------- GitHub ---------- */
+async function gh(path, opts = {}) {
+  const res = await fetch(API + path, {
+    ...opts,
+    cache: "no-store",
+    headers: { "Authorization": "Bearer " + store.get(KEY_TOKEN), "Accept": "application/vnd.github+json", ...(opts.body ? { "Content-Type": "application/json" } : {}) }
+  });
+  if (!res.ok) {
+    const err = new Error("GitHub " + res.status); err.status = res.status;
+    try { err.detail = (await res.json()).message; } catch {}
+    throw err;
+  }
+  return res.status === 204 ? null : res.json();
+}
+function explain(e) {
+  if (e.code === "missing") return "This note was changed elsewhere in the meantime. The list is now up to date: open it again with Edit.";
+  if (e.status === 401) return "The access key is invalid or has expired. Log out and paste a new one.";
+  if (e.status === 403 || e.status === 404) return "The access key can't write to md1-notes-site. Check it has “Contents: Read and write” on this repository.";
+  if (e.status === 409 || e.status === 422) return "The notes changed on GitHub at the same time. Try again.";
+  if (!navigator.onLine) return "You are offline. Your text is kept here; try again when you're back online.";
+  return "It didn't work (" + (e.detail || e.message) + "). Your text is kept here; try again.";
+}
+
+// UTF-8 <-> base64
+const b64decode = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, "")), c => c.charCodeAt(0)));
+const blobToB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
+
+/* ---------- notes.md : découpage en notes ----------
+   Le cadre <!-- … --> du haut contient un exemple « ## date » : on l'ignore. */
+function splitNotes(src) {
+  const comments = [...src.matchAll(/<!--[\s\S]*?-->/g)].map(m => [m.index, m.index + m[0].length]);
+  const inComment = i => comments.some(([a, b]) => i >= a && i < b);
+  const starts = [...src.matchAll(/^#{2,}[ \t]*(?=\d{4}-\d{2}-\d{2})/gm)].map(m => m.index).filter(i => !inComment(i));
+  const preamble = src.slice(0, starts[0] ?? src.length);
+  const blocks = starts.map((s, i) => src.slice(s, starts[i + 1] ?? src.length));
+  return { preamble, blocks };
+}
+function joinNotes({ preamble, blocks }) {
+  const parts = blocks.map(b => b.replace(/\s+$/, "")).filter(Boolean);
+  const head = preamble.replace(/\s+$/, "");
+  return (head ? head + "\n\n" : "") + parts.join("\n\n") + "\n";
+}
+function readBlock(raw) {
+  const lines = raw.replace(/<!--[\s\S]*?-->/g, "").replace(/[﻿​]/g, "").split("\n");
+  const date = (lines.shift().match(/\d{4}-\d{2}-\d{2}/) || [])[0];
+  let tags = [];
+  while (lines.length && !lines[0].trim()) lines.shift();
+  if (lines.length && /^\s*#[^\s#]/.test(lines[0])) tags = lines.shift().split(/[\s,#]+/).filter(Boolean);
+  return { date, tags, text: lines.join("\n").trim() };
+}
+function makeBlock(date, topics, text) {
+  return `## ${date}\n` + (topics.length ? topics.map(t => "#" + t).join(" ") + "\n" : "") + "\n" + text + "\n";
+}
+
+/* ---------- Un seul commit : images + notes.md ---------- */
+async function commit(transform, images, message) {
+  const ref = await gh(`/git/ref/heads/${BRANCH}`);
+  const head = await gh(`/git/commits/${ref.object.sha}`);
+  const file = await gh(`/contents/notes.md?ref=${ref.object.sha}`);
+  const current = b64decode(file.content);
+  let updated;
+  try { updated = transform(current); }
+  catch (e) { source = current; renderList(); throw e; }
+
+  const tree = [];
+  for (const img of images) {
+    setStatus("Uploading " + img.name + "…");
+    const blob = await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: await blobToB64(img.blob), encoding: "base64" }) });
+    tree.push({ path: img.path, mode: "100644", type: "blob", sha: blob.sha });
+  }
+  tree.push({ path: "notes.md", mode: "100644", type: "blob", content: updated });
+  const newTree = await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: head.tree.sha, tree }) });
+  const c = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] }) });
+  await gh(`/git/refs/heads/${BRANCH}`, { method: "PATCH", body: JSON.stringify({ sha: c.sha }) });
+  source = updated; renderList(); renderTopics();
+}
+
+/* ---------- Clé d'accès ---------- */
+$("save-token").onclick = async () => {
+  const t = $("token").value.trim();
+  if (!t) return;
+  store.set(KEY_TOKEN, t);
+  $("save-token").disabled = true; $("setup-error").textContent = "";
+  try {
+    await gh("");                 // vérifie que la clé voit le dépôt
+    $("token").value = "";
+    show();
+  } catch (e) {
+    store.del(KEY_TOKEN);
+    $("setup-error").textContent = e.status === 401 ? "This key is not valid. Copy it again from GitHub." : "This key can't see md1-notes-site. Check “Only select repositories” → md1-notes-site.";
+  }
+  $("save-token").disabled = false;
+};
+$("logout").onclick = () => { store.del(KEY_TOKEN); show(); };
+
+function show() {
+  const has = !!store.get(KEY_TOKEN);
+  $("setup").hidden = has; $("editor").hidden = !has; $("list").hidden = !has; $("logout").hidden = !has;
+  if (has) loadSource();
+}
+
+/* ---------- Notes publiées (lues directement sur GitHub, toujours à jour) ---------- */
+let source = "";
+async function loadSource() {
+  try {
+    const file = await gh(`/contents/notes.md?ref=${BRANCH}`);
+    source = b64decode(file.content);
+  } catch (e) {
+    $("items").innerHTML = ""; const p = document.createElement("p"); p.className = "status error"; p.textContent = explain(e); $("items").appendChild(p);
+    return;
+  }
+  renderList(); renderTopics();
+}
+
+let confirmDelete = null;   // texte brut de la note à confirmer
+function renderList() {
+  const box = $("items"); box.replaceChildren();
+  const blocks = splitNotes(source).blocks.map((raw, order) => ({ raw, order, ...readBlock(raw) })).filter(n => n.date);
+  blocks.sort((a, b) => b.date.localeCompare(a.date) || b.order - a.order);
+  if (!blocks.length) { box.innerHTML = '<p class="hint">No notes yet.</p>'; return; }
+  blocks.forEach(n => {
+    const it = document.createElement("div"); it.className = "item";
+    if (editing && editing.raw === n.raw) it.classList.add("current");
+    const top = document.createElement("div"); top.className = "top";
+    const d = document.createElement("span"); d.textContent = dayLabel(n.date); top.appendChild(d);
+    if (n.tags.length) { const t = document.createElement("span"); t.textContent = n.tags.map(x => "#" + x).join(" "); top.appendChild(t); }
+    const ex = document.createElement("p"); ex.className = "excerpt";
+    ex.textContent = n.text.replace(/!\[[^\]]*\]\([^)]*\)/g, "[image]").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*#]/g, "").replace(/\s+/g, " ").trim() || "(empty)";
+    it.append(top, ex);
+
+    if (confirmDelete === n.raw) {
+      const c = document.createElement("div"); c.className = "confirm";
+      const q = document.createElement("span"); q.textContent = "Delete this note from the site?";
+      c.append(q, link("Yes, delete", () => removeNote(n)), link("Cancel", () => { confirmDelete = null; renderList(); }));
+      it.appendChild(c);
+    } else {
+      const a = document.createElement("div"); a.className = "acts";
+      a.append(link("Edit", () => startEdit(n)), link("Delete", () => { confirmDelete = n.raw; renderList(); }));
+      it.appendChild(a);
+    }
+    box.appendChild(it);
+  });
+}
+function link(label, fn) { const b = document.createElement("button"); b.type = "button"; b.className = "link"; b.textContent = label; b.onclick = fn; return b; }
+
+/* ---------- Sujets existants (évite les doublons) ---------- */
+let knownTopics = [];
+function renderTopics() {
+  const seen = {};
+  splitNotes(source).blocks.forEach(raw => readBlock(raw).tags.forEach(t => seen[t.toLowerCase()] ??= t));
+  knownTopics = Object.values(seen).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+  const box = $("known-topics"); box.replaceChildren();
+  knownTopics.forEach(t => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "#" + t;
+    b.onclick = () => {
+      const cur = parseTopics($("topics").value);
+      if (!cur.some(x => x.toLowerCase() === t.toLowerCase())) $("topics").value = [...cur, t].join(", ");
+      saveDraft();
+    };
+    box.appendChild(b);
+  });
+}
+const parseTopics = s => s.split(/[\s,#]+/).filter(Boolean);
+const canonical = topics => [...new Set(parseTopics(topics).map(t => knownTopics.find(k => k.toLowerCase() === t.toLowerCase()) || t))];
+
+/* ---------- Brouillon (nouvelle note seulement) ---------- */
+function saveDraft() { if (!editing) store.set(KEY_DRAFT, JSON.stringify({ date: $("date").value, topics: $("topics").value, text: $("text").value })); }
+function loadDraft() {
+  let d = {}; try { d = JSON.parse(store.get(KEY_DRAFT)) || {}; } catch {}
+  $("date").value = d.date || today(); $("topics").value = d.topics || ""; $("text").value = d.text || "";
+}
+["date", "topics", "text"].forEach(id => $(id).addEventListener("input", saveDraft));
+
+/* ---------- Modifier / supprimer ---------- */
+let editing = null;   // { raw, date }
+function startEdit(n) {
+  saveDraft();                                  // garde le brouillon de nouvelle note de côté
+  editing = { raw: n.raw, date: n.date };
+  confirmDelete = null;
+  $("date").value = n.date; $("topics").value = n.tags.join(", "); $("text").value = n.text;
+  pending = []; renderFiles();
+  $("editing").hidden = false; $("editing-label").textContent = "Editing the note from " + dayLabel(n.date);
+  $("publish").textContent = "Save changes"; $("clear").hidden = true;
+  setStatus(""); renderList();
+  window.scrollTo({ top: 0 }); $("text").focus();
+}
+function stopEdit() {
+  editing = null;
+  $("editing").hidden = true; $("publish").textContent = "Publish"; $("clear").hidden = false;
+  pending = []; renderFiles(); loadDraft(); renderList();
+}
+$("cancel-edit").onclick = () => { stopEdit(); setStatus(""); };
+
+async function removeNote(n) {
+  confirmDelete = null; renderList();
+  setStatus("Deleting…");
+  try {
+    await commit(cur => {
+      const s = splitNotes(cur);
+      const i = s.blocks.findIndex(b => b.trimEnd() === n.raw.trimEnd());
+      if (i < 0) throw Object.assign(new Error("missing"), { code: "missing" });
+      s.blocks.splice(i, 1);
+      return joinNotes(s);
+    }, [], `Delete note ${n.date}`);
+    if (editing && editing.raw === n.raw) stopEdit();
+    setStatus("Deleted. The site updates in 1–2 minutes.");
+  } catch (e) { setStatus(explain(e), true); }
+}
+
+/* ---------- Images ---------- */
+let pending = [];   // { path, blob, name }
+const slug = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "image";
+
+async function prepare(file) {
+  // GIF : gardé tel quel (animation). Petites images : gardées telles quelles.
+  const ext = (file.name.match(/\.([a-z0-9]+)$/i) || [, "jpg"])[1].toLowerCase();
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    if (ext === "gif" || (img.naturalWidth <= 1600 && file.size < 500 * 1024)) return { blob: file, ext: ext === "jpeg" ? "jpg" : ext };
+    const scale = Math.min(1, 1600 / img.naturalWidth);
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, c.width, c.height);   // fond blanc pour les PNG transparents
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(res => c.toBlob(res, "image/jpeg", 0.85));
+    return { blob, ext: "jpg" };
+  } finally { URL.revokeObjectURL(url); }
+}
+
+$("images").onchange = async e => {
+  const files = [...e.target.files]; e.target.value = "";
+  for (const f of files) {
+    setStatus("Preparing " + f.name + "…");
+    try {
+      const { blob, ext } = await prepare(f);
+      const path = `images/${$("date").value || today()}-${slug(f.name)}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+      pending.push({ path, blob, name: f.name });
+      insertAtCursor(`![${f.name.replace(/\.[^.]+$/, "").replace(/[\[\]]/g, "")}](${path})`);
+      setStatus("");
+    } catch {
+      setStatus(f.name + " can't be read by this browser. If it is a HEIC photo, export it as JPG first.", true);
+    }
+  }
+  renderFiles();
+};
+function insertAtCursor(line) {
+  const ta = $("text"), s = ta.selectionStart ?? ta.value.length, v = ta.value;
+  const before = v.slice(0, s), after = v.slice(s);
+  const ins = (before && !before.endsWith("\n") ? "\n\n" : "") + line + (after.startsWith("\n") ? "" : "\n");
+  ta.value = before + ins + after;
+  ta.selectionStart = ta.selectionEnd = (before + ins).length;
+  saveDraft();
+}
+function renderFiles() {
+  const box = $("files"); box.replaceChildren();
+  pending.forEach(p => {
+    const d = document.createElement("div");
+    d.textContent = `${p.name} → ${p.path} (${Math.round(p.blob.size / 1024)} KB)`;
+    box.appendChild(d);
+  });
+}
+
+/* ---------- Publier (nouvelle note) ou enregistrer (note modifiée) ---------- */
+$("publish").onclick = async () => {
+  const date = $("date").value, text = $("text").value.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return setStatus("Choose a date.", true);
+  if (!text) return setStatus("Write something before publishing.", true);
+  const block = makeBlock(date, canonical($("topics").value), text);
+  const images = pending.filter(p => text.includes(p.path));
+  const firstLine = text.split("\n")[0].replace(/[#*\[\]()!]/g, "").slice(0, 60);
+
+  $("publish").disabled = true;
+  setStatus(editing ? "Saving…" : "Publishing…");
+  try {
+    if (editing) {
+      const orig = editing.raw;
+      await commit(cur => {
+        const s = splitNotes(cur);
+        const i = s.blocks.findIndex(b => b.trimEnd() === orig.trimEnd());
+        if (i < 0) throw Object.assign(new Error("missing"), { code: "missing" });
+        s.blocks[i] = block;
+        return joinNotes(s);
+      }, images, `Edit note ${date}: ${firstLine}`);
+      stopEdit();
+      setStatus("Saved. The site updates in 1–2 minutes.");
+    } else {
+      await commit(cur => cur.replace(/\s+$/, "") + "\n\n" + block, images, `Note ${date}: ${firstLine}`);
+      pending = []; renderFiles();
+      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT);
+      setStatus("Published. The site updates in 1–2 minutes.");
+    }
+  } catch (e) {
+    setStatus(explain(e), true);
+  }
+  $("publish").disabled = false;
+};
+
+$("clear").onclick = () => {
+  $("text").value = ""; $("topics").value = ""; $("date").value = today();
+  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus("");
+};
+
+loadDraft();
+show();
+</script>
+</body>
+</html>

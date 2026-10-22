@@ -245,7 +245,7 @@ Memo Akten
 Epistemology is the branch of philosophy that studies the nature, origin, scope, and limits of human knowledge.
 
 ## 2026-10-21
-#conference #LauraFerrarello #theory #ethics
+#conference #LauraFerrarello #ethics #Methodology
 
 Architecture, EPFL, Design innovation and ethics special interest in AI
 

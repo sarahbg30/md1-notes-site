@@ -25,7 +25,6 @@ The Foundation for Art and Creative Technology (FACT) is the UK's leading centre
 
 [Life forever Spa](https://vjnks.com/projects/life-forever)
 
-
 ## 2026-10-09
 #thesis #alumni #VJing
 Lise Mendes's Thesis "VJing through social media".
@@ -217,7 +216,6 @@ Companion projects
 
 Questions
 
-
 ## 2026-10-19
 
 #festivals
@@ -239,8 +237,7 @@ Kikk (https://kikkfestival.be) (be)
 
 Memo Akten
 
-### [Danielle Brathwaite-Shirley](https://www.daniellebrathwaiteshirley.com) - artiste multimédia playing with reality and queerness monstrous 
-
+### [Danielle Brathwaite-Shirley](https://www.daniellebrathwaiteshirley.com) - artiste multimédia playing with reality and queerness monstrous
 
 ## 2026-10-19
 #theory
@@ -310,4 +307,4 @@ Multiple perspectives, multi disciplinary, collective work
 ## 2026-10-22
 #CreativeCode #RafaëlRozendaal
 
-Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozendaal](https://www.newrafael.com/internet)
+Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozendaal](https://www.newrafael.com/internet).

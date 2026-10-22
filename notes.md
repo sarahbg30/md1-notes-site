@@ -307,3 +307,9 @@ Multiple perspectives, multi disciplinary, collective work
 ![Laura Ferrarello](images/lauraferrarello.JPG)
 ![Laura Ferrarello](images/lauraferrarello2.jpg)
 
+## 2026-10-22
+#test
+
+hey its a test
+
+![ ](images/2026-10-22-image-61xa.jpg)

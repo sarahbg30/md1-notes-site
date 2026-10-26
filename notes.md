@@ -326,3 +326,22 @@ CSS styles HTML.
 Could be a T-shirt idea.
 
 ![body-and-mind](images/2026-10-26-body-and-mind-6dm3.png)
+
+## 2026-10-26
+#RifkeSadleir #Website #Workshop
+
+Color on websites written in binary or with hex code.
+
+![rgb.png](images/2026-10-26-rgb-png-1ahz.webp)
+
+Each of these sections ranges from 0 to 255, where 0 is no light and 255 is the maximum amount of light coming from that particular colour in the pixel.
+
+![hexcolor.png](images/2026-10-26-hexcolor-png-311q.webp)
+
+Each of these sections ranges from 00 to FF, where 00 is no light and FF is the maximum amount of light coming from that particular colour in the pixel. These values represent the decimal numbers 0-255.
+
+![images](images/2026-10-26-images-suay.png)
+
+A color book for the nerds ? Amazing
+
+![Color-Binary-Numbers-Two-Sharks](images/2026-10-26-color-binary-numbers-two-sharks-iml7.png)

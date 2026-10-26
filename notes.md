@@ -310,3 +310,12 @@ Multiple perspectives, multi disciplinary, collective work
 Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozendaal](https://www.newrafael.com/internet).
 
 ![RafaëlRozendaal](images/2026-10-22-rafaelrozendaal-bnmd.jpg)
+
+## 2026-10-22
+#Workshop #Website #RifkeSadleir
+
+Building websites is kind of like building a house with html.
+There is a system of putting boxes in other boxes.
+CSS styles HTML.
+
+![home-sweet-home](images/2026-10-22-home-sweet-home-xm2o.png)

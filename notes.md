@@ -311,7 +311,7 @@ Amaury showed us the super fun, minimal and poetical websites of [Rafaël Rozend
 
 ![RafaëlRozendaal](images/2026-10-22-rafaelrozendaal-bnmd.jpg)
 
-## 2026-10-22
+## 2026-10-26
 #Workshop #Website #RifkeSadleir
 
 Building websites is kind of like building a house with html.

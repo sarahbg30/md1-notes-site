@@ -319,3 +319,10 @@ There is a system of putting boxes in other boxes.
 CSS styles HTML.
 
 ![home-sweet-home](images/2026-10-22-home-sweet-home-xm2o.png)
+
+## 2026-10-26
+#Website #Idea
+
+Could be a T-shirt idea.
+
+![body-and-mind](images/2026-10-26-body-and-mind-6dm3.png)

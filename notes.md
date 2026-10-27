@@ -359,3 +359,10 @@ boycotting the performative, becoming humans again
 
 - moderating, the fine line between being authoritarian and libertarian
 - hosting a website, creating them is basically affirming a form of authority with your choices
+
+## 2026-10-27
+#thesis
+
+I'm obsessed with organograms.
+
+![laurel5](images/2026-10-27-laurel5-eog2.jpg)

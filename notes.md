@@ -353,3 +353,9 @@ Performance ≠ Performing
 online performance-ing 
 the paradoxe of performance,
 boycotting the performative, becoming humans again
+
+## 2026-10-27
+#RifkeSadleir #Workshop #thesis
+
+- moderating, the fine line between being authoritarian and libertarian
+- hosting a website, creating them is basically affirming a form of authority with your choices

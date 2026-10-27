@@ -345,3 +345,11 @@ Each of these sections ranges from 00 to FF, where 00 is no light and FF is the 
 A color book for the nerds ? Amazing
 
 ![Color-Binary-Numbers-Two-Sharks](images/2026-10-26-color-binary-numbers-two-sharks-iml7.png)
+
+## 2026-10-27
+#thesis
+
+Performance ≠ Performing
+online performance-ing 
+the paradoxe of performance,
+boycotting the performative, becoming humans again

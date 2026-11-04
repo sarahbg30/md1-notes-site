@@ -426,3 +426,16 @@ Examples of events happening :
 Finding a photo
 Finding an animation
 Seeing fucked up things in video games (tortures) Sims
+
+## 2026-11-04
+#AndreOurednik #conference
+
+Elden Ring
+Rely on a common cultural ground
+Reinvent our own  archetypes
+
+Game, [Manifold Garden](https://store.steampowered.com/app/473950/Manifold_Garden/),
+
+Conversations between self and self as Sigmund [Freud](https://youtu.be/sn-UNGcbi2Q?si=64bdpe5FC4wJ-1ON), 2015, University of Barcelona
+
+#JulietToo, Augmented Reality Installation, Tamiko Thiel, 2022

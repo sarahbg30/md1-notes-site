@@ -389,3 +389,20 @@ We're spending time and money consuming fiction, videos, films, games.
 Concepts of virtual realities
 
 ![real-etymology](images/2026-11-04-real-etymology-yw5q.jpg)
+
+## 2026-11-04
+#AndreOurednik #conference
+
+Documentary fiction can change reality
+
+This is a work of finding coherence in reality.
+
+[Forensic Architecture](https://forensic-architecture.org)
+
+Architecture is an art of immersion, Peter Sloterdijk
+
+[Hellblade: Senua's Sacrifice](https://store.steampowered.com/app/414340/Hellblade_Senuas_Sacrifice/), about schizophrenia (beautiful aesthetics), editor Ninja Theory
+
+[Shady Part of Me](https://store.steampowered.com/app/1116580/Shady_Part_of_Me/) super beautiful aesthetics too
+
+Book, Miriam Did, Everything to Play For: How Videogames Are Changing the World, 2024, editor : le passager clandestin

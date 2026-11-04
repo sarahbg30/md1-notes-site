@@ -368,7 +368,7 @@ I'm obsessed with organograms.
 ![laurel5](images/2026-10-27-laurel5-eog2.jpg)
 
 ## 2026-11-04
-#AndreOurednik
+#AndreOurednik #conference
 
 4 november : What is reality ?
 18 november : A.I and the ecosystem of meaning

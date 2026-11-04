@@ -407,6 +407,8 @@ Architecture is an art of immersion, Peter Sloterdijk
 
 Book, Mirijam Did, Everything to Play For: How Videogames Are Changing the World, 2024, editor : le passager clandestin
 
+![Continuous_and_discrete_variables](images/2026-11-04-continuous-and-discrete-variables-f7a0.png)
+
 ## 2026-11-03
 #Idea #PlayToPrevention #AdamHudec #MoritzKoenig #Games #Memories #Spaces #DayNightDreams #QuestioningRealities #Live #Lag #Dissociation #AlterEgo #Anonymity #y2k #Obedience #Ritual #Labeling #Boundaries #Body #Mind #IdentityConstruction #Affiliation #Memes #InnerQuest #CulturalInteractiveObject
 

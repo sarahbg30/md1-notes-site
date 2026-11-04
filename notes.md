@@ -406,3 +406,23 @@ Architecture is an art of immersion, Peter Sloterdijk
 [Shady Part of Me](https://store.steampowered.com/app/1116580/Shady_Part_of_Me/) super beautiful aesthetics too
 
 Book, Mirijam Did, Everything to Play For: How Videogames Are Changing the World, 2024, editor : le passager clandestin
+
+## 2026-11-03
+#Idea #PlayToPrevention #AdamHudec #MoritzKoenig #Games #Memories #Spaces #DayNightDreams #QuestioningRealities #Live #Lag #Dissociation #AlterEgo #Anonymity #y2k #Obedience #Ritual #Labeling #Boundaries #Body #Mind #IdentityConstruction #Affiliation #Memes #InnerQuest #CulturalInteractiveObject
+
+We’re in a family?
+Family intact?
+Do we have parents?
+We like our big Sibling 
+Do they like us?
+Do we see that our sibling is suffering or unwell?
+We care about our sibling
+Do we actively search for clues or do we stumble upon them?
+Do we know how to interpret them?
+Do we act upon it? Or do we not register the clues and don’t act up on them even tho they’re so obvious that the reader would get them?
+We’re 8/9 and the older sibling around 12/13
+The spying game is happening at night.
+Examples of events happening : 
+Finding a photo
+Finding an animation
+Seeing fucked up things in video games (tortures) Sims

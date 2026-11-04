@@ -366,3 +366,26 @@ boycotting the performative, becoming humans again
 I'm obsessed with organograms.
 
 ![laurel5](images/2026-10-27-laurel5-eog2.jpg)
+
+## 2026-11-04
+#AndreOurednik
+
+4 november : What is reality ?
+18 november : A.I and the ecosystem of meaning
+
+Geographer, philosophy, fiction, agent based modelling, text and data mining
+Polyharmonies
+
+Freelance artist
+Robopoiesis, les intelligences artificielles de la nature
+
+alterated realities and real alternatives
+
+The Galvanosphere
+Electricity
+
+We're spending time and money consuming fiction, videos, films, games.
+
+Concepts of virtual realities
+
+![real-etymology](images/2026-11-04-real-etymology-yw5q.jpg)

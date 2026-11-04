@@ -405,4 +405,4 @@ Architecture is an art of immersion, Peter Sloterdijk
 
 [Shady Part of Me](https://store.steampowered.com/app/1116580/Shady_Part_of_Me/) super beautiful aesthetics too
 
-Book, Miriam Did, Everything to Play For: How Videogames Are Changing the World, 2024, editor : le passager clandestin
+Book, Mirijam Did, Everything to Play For: How Videogames Are Changing the World, 2024, editor : le passager clandestin

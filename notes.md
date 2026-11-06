@@ -468,3 +468,16 @@ Key references from before getting in the master
 - Cyprien Gaillard, HUMPTY / DUMPTY
 - Joana Vasconcelos, The Absurd and the Dreamlike
 - Max Hooper Schneider, Rotting in a free world
+
+## 2026-11-06
+#thesis #DesigningQuestions
+
+Reccurent themes, aesthetics with which I resonate
+Rot, entropy, dirty
+Speculative, seeking for hope
+Party, dance, expression, madness, energy, music, resist
+
+These are not oppisite they work together entropy is the reason we need to organize and fight to protect things we value. Building is resisting, rot is also a reminder that everything can transform. Rot is beauty.
+I also like that it's something we live with and hide as if we were too important too be mixed with.
+
+A little death, 2002 by Sam Taylor-Johnson

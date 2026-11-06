@@ -443,3 +443,13 @@ Conversations between self and self as Sigmund [Freud](https://youtu.be/sn-UNGcb
 #JulietToo, Augmented Reality Installation, Tamiko Thiel, 2022
 
 [Techo-chamanisme](https://adelinschweitzer.com/alphaloop-fr)
+
+## 2026-11-04
+#thesis #DesigningQuestions
+
+What to do for next week:
+ 
+- Bring 4 key references central to your interest
+- Try to map your subject or question (mind map, write a text, a place, a
+community, a series of questions)
+- Try to think about your angle of approach

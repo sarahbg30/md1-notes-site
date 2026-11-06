@@ -453,3 +453,18 @@ What to do for next week:
 - Try to map your subject or question (mind map, write a text, a place, a
 community, a series of questions)
 - Try to think about your angle of approach
+
+## 2026-11-06
+#thesis #DesigningQuestions
+
+Key references from before getting in the master
+
+- Valentin Ranger, The Orgiax Spring
+- Arvida Bystrom, Biblically accurate
+- Eric Vernhes, Meeting Philipp
+- Markos Kay, aBiogenesis
+- Marina Abramovic, The artist is present
+- Sophie Calle, L'Hotel
+- Cyprien Gaillard, HUMPTY / DUMPTY
+- Joana Vasconcelos, The Absurd and the Dreamlike
+- Max Hooper Schneider, Rotting in a free world

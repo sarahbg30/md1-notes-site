@@ -410,7 +410,7 @@ Book, Mirijam Did, Everything to Play For: How Videogames Are Changing the World
 ![Continuous_and_discrete_variables](images/2026-11-04-continuous-and-discrete-variables-f7a0.png)
 
 ## 2026-11-03
-#Idea #PlayToPrevention #AdamHudec #MoritzKoenig #Games #Memories #Spaces #DayNightDreams #QuestioningRealities #Live #Lag #Dissociation #AlterEgo #Anonymity #y2k #Obedience #Ritual #Labeling #Boundaries #Body #Mind #IdentityConstruction #Affiliation #Memes #InnerQuest #CulturalInteractiveObject
+#Idea #FromPlayToPrevention #AdamHudec #MoritzKoenig #Games #Memories #Spaces #DayNightDreams #QuestioningRealities #Live #Lag #Dissociation #AlterEgo #Anonymity #y2k #Obedience #Ritual #Labeling #Boundaries #Body #Mind #IdentityConstruction #Affiliation #Memes #InnerQuest #CulturalInteractiveObject
 
 We’re in a family?
 Family intact?

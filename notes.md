@@ -483,7 +483,7 @@ I also like that it's something we live with and hide as if we were too importan
 A little death, 2002 by Sam Taylor-Johnson
 
 ## 2026-11-09
-#conference #Mariana #PlayToPrevention
+#conference #Mariana #FromPlayToPrevention
 
 The everyday, ordinary social interactions of teenagers are being impacted by digital technology.
 
@@ -497,3 +497,5 @@ Shifting away from an adult-centric perspective
 The connection is built in person and continues online; today, every stable relationship has an online extension.
 
 Mariana studied sociability around the school and then around the neighborhood.
+
+In online relational spaces, we don't want to share the same things with the same people.

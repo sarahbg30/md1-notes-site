@@ -481,3 +481,19 @@ These are not oppisite they work together entropy is the reason we need to organ
 I also like that it's something we live with and hide as if we were too important too be mixed with.
 
 A little death, 2002 by Sam Taylor-Johnson
+
+## 2026-11-09
+#conference #Mariana #PlayToPrevention
+
+The everyday, ordinary social interactions of teenagers are being impacted by digital technology.
+
+Time online: Social connection, Media and culture consumption, Video games
+
+Multisite ethnography
+Participant observation, urban walking interviews, digital walking interviews, online ethnography, focus groups in collective reception settings
+
+Shifting away from an adult-centric perspective
+
+The connection is built in person and continues online; today, every stable relationship has an online extension.
+
+Mariana studied sociability around the school and then around the neighborhood.

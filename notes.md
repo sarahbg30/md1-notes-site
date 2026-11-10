@@ -515,3 +515,15 @@ It's documentary, graphicly interesting, art approach, romanticized by her words
 #DanielleBrathwaiteShirley #thesis
 
 Online game, installation [Danielle Brathwaite-Shirley](https://kikkfestival.be/talks/danielle-brathwaite-shirley-talk-kikk2026)
+
+## 2026-11-10
+#thesis
+
+Questions
+
+What do I want to get better at ?
+What do I want to try that I never did ?
+symbiosis, synesthesia - audio video, physical space
+What is something that matters ?
+What did I like so far ? 
+What is the tone I would like to use ?

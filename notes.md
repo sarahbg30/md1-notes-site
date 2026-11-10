@@ -510,3 +510,8 @@ The feeling of symbiosis, synchronicity, sound attacking my core, the words.
 Observing worlds and symbiosis, speculative biology, micro worlds, simulations, simulators. Conway's game of life.
 Sometimes the most impactful thing you could do is to be, in real space, in real time, creating in a way the absolute opposite of cinema ? without having the goal of being objective.
 It's documentary, graphicly interesting, art approach, romanticized by her words.
+
+## 2026-11-10
+#DanielleBrathwaiteShirley #thesis
+
+Online game, installation [Danielle Brathwaite-Shirley](https://kikkfestival.be/talks/danielle-brathwaite-shirley-talk-kikk2026)

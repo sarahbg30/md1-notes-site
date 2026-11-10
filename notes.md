@@ -501,6 +501,7 @@ Mariana studied sociability around the school and then around the neighborhood.
 In online relational spaces, we don't want to share the same things with the same people.
 
 ## 2026-11-09
+#thesis #Body #AlterEgo
 
 Why do I respectively like about them ?
 Create a world, no story, talk about bodies, materials, fluidity, fiction and alternatives.

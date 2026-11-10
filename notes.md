@@ -499,3 +499,13 @@ The connection is built in person and continues online; today, every stable rela
 Mariana studied sociability around the school and then around the neighborhood.
 
 In online relational spaces, we don't want to share the same things with the same people.
+
+## 2026-11-09
+
+Why do I respectively like about them ?
+Create a world, no story, talk about bodies, materials, fluidity, fiction and alternatives.
+Body representations, hypersexuality.
+The feeling of symbiosis, synchronicity, sound attacking my core, the words.
+Observing worlds and symbiosis, speculative biology, micro worlds, simulations, simulators. Conway's game of life.
+Sometimes the most impactful thing you could do is to be, in real space, in real time, creating in a way the absolute opposite of cinema ? without having the goal of being objective.
+It's documentary, graphicly interesting, art approach, romanticized by her words.

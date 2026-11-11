@@ -463,6 +463,9 @@ Key references from before getting in the master
 - Valentin Ranger, The Orgiax Spring
 - Arvida Bystrom, Biblically accurate
 - Eric Vernhes, Meeting Philipp
+
+![meetingphilipp](images/2026-11-06-meetingphilipp-n9fq.jpg)
+
 - Markos Kay, aBiogenesis
 - Marina Abramovic, The artist is present
 - Sophie Calle, L'Hotel

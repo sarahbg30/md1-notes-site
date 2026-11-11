@@ -554,3 +554,11 @@ Defining
 Angle : Critical, Representation, Scientific, Historical, Experiential, Speculative
 
 Liminal spaces, degradation,
+
+## 2026-11-11
+#thesis #CyprienGaillard #entropy #Spaces #artist
+
+**HUMPTY \ DUMPTY**, a project by Cyprien Gaillard in autumn 2022, is an exhibition in two chapters, shown at the same time at the Palais de Tokyo and Lafayette Anticipations. 
+The artist built it around a reflection on time: its traces, its effects, and the relationships humans form with it. The project takes its cue from the moment, as Paris frantically restores its most prestigious monuments and erases their signs of wear ahead of the Olympic Games.
+Cyprien Gaillard shows how the city is a prime ground for entropy (decay, disorder and the unpredictable) to express itself, and how humans, in turn, tend to fight against that state. In the margins, the nooks and the spaces of dissent, the artist probes our desire for order, permanence and constancy, and finds there the stories of possible new equilibriums.
+**HUMPTY \ DUMPTY** takes its title from Lewis Carroll's novel *Through the Looking-Glass*. It refers to the egg-shaped character who falls from a wall and who, despite many attempts, can never be restored to his original state.

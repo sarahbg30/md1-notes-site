@@ -505,12 +505,28 @@ In online relational spaces, we don't want to share the same things with the sam
 #thesis #Body #AlterEgo
 
 Why do I respectively like about them ?
+
+- Valentin Ranger, The Orgiax Spring
 Create a world, no story, talk about bodies, materials, fluidity, fiction and alternatives.
+
+- Arvida Bystrom, Biblically accurate
 Body representations, hypersexuality.
+
+- Eric Vernhes, Meeting Philipp
 The feeling of symbiosis, synchronicity, sound attacking my core, the words.
+
+- Markos Kay, aBiogenesis
 Observing worlds and symbiosis, speculative biology, micro worlds, simulations, simulators. Conway's game of life.
+
+- Marina Abramovic, The artist is present
 Sometimes the most impactful thing you could do is to be, in real space, in real time, creating in a way the absolute opposite of cinema ? without having the goal of being objective.
+
+- Sophie Calle, L'Hotel
 It's documentary, graphicly interesting, art approach, romanticized by her words.
+
+- Cyprien Gaillard, HUMPTY / DUMPTY
+- Joana Vasconcelos, The Absurd and the Dreamlike
+- Max Hooper Schneider, Rotting in a free world
 
 ## 2026-11-10
 #DanielleBrathwaiteShirley #thesis

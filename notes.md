@@ -527,3 +527,12 @@ symbiosis, synesthesia - audio video, physical space
 What is something that matters ?
 What did I like so far ? 
 What is the tone I would like to use ?
+
+## 2026-11-11
+#thesis
+
+Ce qui a beaucoup de sens comparé au autres pratiques à mes yeux : les projets ont pour but d''être Acccessible, vulgarise, documente à partir de matériel récolté ou parfois même créé.
+
+Le VJing à travers les réseaux sociaux, j'aimerais aussi mener des recherches comme elle sur des sujets assez peu documentés, un peu comme dans mon mémoire sur l'esthétique hyperpop.
+Les axes que j'avais choisi (était surement : 
+Internet aesthetics, retro and minimal games, glitch / Un espace virtuel libre, corps immatériel, la figure de la cyber-girl / Une fête politique, héritage queer,

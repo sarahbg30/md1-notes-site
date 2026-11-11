@@ -586,9 +586,14 @@ Everytime I save a reference I have to add a sentence about why it's interesting
 ## 2026-11-11
 #thesis #CyprienGaillard #entropy #Spaces #artist
 
+![CatalogueCyprien.png](images/2026-11-11-cataloguecyprien-png-468l.jpg)
+
 **HUMPTY \ DUMPTY**, a project by Cyprien Gaillard in autumn 2022, is an exhibition in two chapters, shown at the same time at the Palais de Tokyo and Lafayette Anticipations. 
 The artist built it around a reflection on time: its traces, its effects, and the relationships humans form with it. The project takes its cue from the moment, as Paris frantically restores its most prestigious monuments and erases their signs of wear ahead of the Olympic Games.
 Cyprien Gaillard shows how the city is a prime ground for entropy (decay, disorder and the unpredictable) to express itself, and how humans, in turn, tend to fight against that state. In the margins, the nooks and the spaces of dissent, the artist probes our desire for order, permanence and constancy, and finds there the stories of possible new equilibriums.
+
+![5-scaled.jpg](images/2026-11-11-5-scaled-jpg-qee5.jpg)
+
 **HUMPTY \ DUMPTY** takes its title from Lewis Carroll's novel *Through the Looking-Glass*. It refers to the egg-shaped character who falls from a wall and who, despite many attempts, can never be restored to his original state.
 
 ## 2026-11-11

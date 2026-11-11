@@ -558,8 +558,11 @@ Notes on VJing through social media. I'd also like to do research like hers on s
 The themes I had chosen :
 Internet aesthetics, retro and minimal games, glitch / A free virtual space, the immaterial body, the figure of the cyber-girl /  Partying as a political act, queer heritage, building community, digital capitalism, reappropriation / Superficiality? Artifice, sincerity, pretty dollcorpse
 
-What was lacking to my opinion ?  Clarity on my POV,  when we talk about DIY vernacular and web, the question of AI has to be mentionned because they didn't get the point I was trying to make on maximalist aesthetics and sounds made with minimal means, something that speaks with sincerity and not caring about some conventions on how we should create.
+What was lacking to my opinion ?  
+Angle - I want something more personnal, more from me maybe less documentary
+Clarity on my POV,  when we talk about DIY vernacular and web, the question of AI has to be mentionned because they didn't get the point I was trying to make on maximalist aesthetics and sounds made with minimal means, something that speaks with sincerity and not caring about some conventions on how we should create.
 The paradoxe of creating a niche and cutting access to others by being less accessible, being exclusive to the one that excluded us before, repeating the violence?
+Even niches and subcultures have codes.
 
 Liminal spaces, degradation
 

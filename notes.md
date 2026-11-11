@@ -578,3 +578,11 @@ Cyprien Gaillard shows how the city is a prime ground for entropy (decay, disord
 #thesis
 
 What is mainstream/niche ? What is inclusive/exclusive ?
+
+What is the link between body and fascism ?
+
+What does it mean to be dignified? Do we really have any power over what becomes of our lives?
+
+Is one kind of pain more legitimate than another?
+
+What does society teach us about pain?

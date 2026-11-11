@@ -679,3 +679,8 @@ Groups are so polarized they're no longer talking to each other
 
 Travel through the [Globodrome](https://d-w.fr/en/projects/globodrome/)
 Gwenola Wagon, video and book
+
+## 2026-11-11
+#Figma #board
+
+[Figma Board](https://www.figma.com/board/NlmLs0hXhmhTVMLA8lv3Ez/designing-questions?node-id=0-1&t=gUN8LbqDs3R9URzM-1)

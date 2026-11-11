@@ -681,6 +681,9 @@ Travel through the [Globodrome](https://d-w.fr/en/projects/globodrome/)
 Gwenola Wagon, video and book
 
 ## 2026-11-11
-#Figma #board
+#Figma #board #DesigningQuestions #are.na
+
+Designing questions Annexes
 
 [Figma Board](https://www.figma.com/board/NlmLs0hXhmhTVMLA8lv3Ez/designing-questions?node-id=0-1&t=gUN8LbqDs3R9URzM-1)
+[are.na board](https://www.are.na/sarah-courtade/designing-questions-md1)

@@ -617,3 +617,15 @@ And now, audience members filming live on their phones
 Hypertextual storytelling: each audience member adds their own footage to a collective, fragmented narrative
 
 The concert becomes a space where a digital memory is produced collectively
+
+## 2026-11-11
+#thesis #PattiSmith #music
+
+Music is spiritual
+
+Patti Smith, Evidence, exhibition
+
+Summary from the Centre Pompidou's website
+A **poetic and immersive quest**, *Evidence* is an ode to a world without borders: a contemporary reflection on the infinite and the universal, and a spiritual search for **unity as a living, life-giving presence**. The physical, sonic and visual journeys of the Soundwalk Collective enter into an endless dialogue with the poetic paths of the American musician and poet Patti Smith, creating a new vision and a new language as this exploration unfolds. The *Evidence* exhibition seeks out metaphysical truths and the invisible, **unspeakable connections between times, beings and places**. It is more than an **archaeology** of travel: it is a journey in itself.
+
+Soundwalk Collective is an experimental collective founded by Stephan Crasneanscki in New York in 2000 and joined by Simone Merli in 2008. Their artistic practice combines anthropology, ethnography, non-linear storytelling, psychogeography, observation of nature and experiments with sound recording. Each of their works starts from a specific place, natural or man-made, and requires long periods of research trips and fieldwork.

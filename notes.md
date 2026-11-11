@@ -535,6 +535,8 @@ Online game, installation [Danielle Brathwaite-Shirley](https://kikkfestival.be/
 
 Danielle utilizes interactive technologies to create participatory spaces that challenge traditional narratives and encourage active engagement, ultimately creating experiences in which the audience itself becomes the main medium.
 
+Through their innovative use of digital media, Danielle not only preserves histories but also envisions inclusive futures where the voices of those that are ignored or erased are central. Their work is both ‘archive and insurgency’, a catalyst for dialogue, inviting audiences to reflect on their roles within broader societal structures.
+
 ## 2026-11-10
 #thesis
 

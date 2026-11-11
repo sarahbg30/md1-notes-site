@@ -23,7 +23,10 @@
 #Ritual #Spaces #y2k #theory #travel
 
 ## Media
-#book #video #music #Games #are.na #board #conference #festivals #Workshop
+#book #video #music #Games #are.na #board #conference #festivals
+
+## Workshops
+#Workshop #FromPlayToPrevention
 
 ## Other
-#thesis #artist #artists #alumni #advice #Idea #FromPlayToPrevention
+#thesis #artist #artists #alumni #advice #Idea

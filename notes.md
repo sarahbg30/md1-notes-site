@@ -564,6 +564,8 @@ Clarity on my POV,  when we talk about DIY vernacular and web, the question of A
 The paradoxe of creating a niche and cutting access to others by being less accessible, being exclusive to the one that excluded us before, repeating the violence?
 Even niches and subcultures have codes.
 
+Something interesting - hyperpop as an updated form of pyschedelism
+
 Liminal spaces, degradation
 
 ## 2026-11-11

@@ -40,8 +40,17 @@ nav button[aria-current="true"] { font-weight: 600; }
 button:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
 nav .n { color: var(--muted); font-variant-numeric: tabular-nums; }
 nav .empty { color: var(--muted); font-size: 13px; }
-nav li.cat { font-size: 12px; color: var(--muted); margin: 10px 0 2px; }
-nav li.cat:first-child { margin-top: 0; }
+/* Catégories dépliables */
+nav details > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; padding: 3px 6px; margin-left: -6px; }
+nav details > summary::-webkit-details-marker { display: none; }
+nav details > summary:hover { background: var(--hover); }
+nav details > summary:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
+nav details > summary .name::before { content: "▸"; display: inline-block; width: 1em; color: var(--muted); }
+nav details[open] > summary .name::before { content: "▾"; }
+nav details > ul { padding-left: 1em; margin-bottom: 4px; }
+nav li > button { gap: 8px; }
+nav li > button > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 680px) { nav details > summary { padding: 6px; } }
 
 .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .cal-head span { font-size: 13px; }
@@ -162,7 +171,8 @@ function inline(text) {
 
 /* ---------- Catégories de sujets (categories.md) ----------
    « ## Nom » = une catégorie ; en dessous, ses sujets avec # */
-let categories = [];   // [{ name, tags: [minuscules] }]
+let categories = [];
+const openCats = new Set();   // catégories dépliées dans le menu   // [{ name, tags: [minuscules] }]
 async function loadCategories() {
   try {
     const res = await fetch("categories.md", { cache: "no-store" });
@@ -269,8 +279,22 @@ function renderMenu() {
   });
   const shown = groups.filter(g => g.items.length);
   shown.forEach(g => {
-    if (shown.length > 1) { const h = document.createElement("li"); h.className = "cat"; h.textContent = g.name; tl.appendChild(h); }
-    g.items.forEach(t => tl.appendChild(li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t)));
+    const item = t => li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t);
+    if (shown.length === 1) { g.items.forEach(t => tl.appendChild(item(t))); return; }
+    // Une catégorie = un menu déroulant ; celle du sujet choisi reste ouverte
+    const active = filter.kind === "tag" && g.items.includes(filter.value);
+    const wrap = document.createElement("li");
+    const d = document.createElement("details");
+    d.open = openCats.has(g.name) || active;
+    const sum = document.createElement("summary");
+    const nm = document.createElement("span"); nm.className = "name"; nm.textContent = g.name;
+    const n = document.createElement("span"); n.className = "n"; n.textContent = g.items.length;
+    sum.append(nm, n);
+    const ul = document.createElement("ul");
+    g.items.forEach(t => ul.appendChild(item(t)));
+    d.append(sum, ul);
+    d.addEventListener("toggle", () => { d.open ? openCats.add(g.name) : openCats.delete(g.name); });
+    wrap.appendChild(d); tl.appendChild(wrap);
   });
   if (!tl.children.length) tl.innerHTML = '<li class="empty">No topics yet</li>';
 }

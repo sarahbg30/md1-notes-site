@@ -533,6 +533,8 @@ It's documentary, graphicly interesting, art approach, romanticized by her words
 
 Online game, installation [Danielle Brathwaite-Shirley](https://kikkfestival.be/talks/danielle-brathwaite-shirley-talk-kikk2026)
 
+Danielle utilizes interactive technologies to create participatory spaces that challenge traditional narratives and encourage active engagement, ultimately creating experiences in which the audience itself becomes the main medium.
+
 ## 2026-11-10
 #thesis
 

@@ -15,7 +15,8 @@
 -->
 
 ## 2026-10-10
-#artist #installation
+#artist #installation #thesis
+
 I discovered an installation by Vytas Jankauskas *Life Forever Spa*.
 
 I really like the tone between performance, immersive experience and all of the references implied to the purgatory, the relation to time.

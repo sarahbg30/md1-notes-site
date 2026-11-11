@@ -553,7 +553,13 @@ We need to narrow it down, create boundaries on the subject we are going to cove
 Defining 
 Angle : Critical, Representation, Scientific, Historical, Experiential, Speculative
 
-Liminal spaces, degradation,
+Tips
+Look into bibliographies, conferences, key museums
+And what are the angles they use (anthropology, sociology)
+
+Tools
+Zotero
+Everytime I save a reference I have to add a sentence about why it's interesting to me
 
 ## 2026-11-11
 #thesis #CyprienGaillard #entropy #Spaces #artist

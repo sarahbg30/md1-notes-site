@@ -6,11 +6,11 @@
 <title>Logbook</title>
 <style>
 :root {
-  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3;
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3; --mark: #fff1a8;
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #161616; --fg: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --hover: #222222; color-scheme: dark; }
+  :root { --bg: #161616; --fg: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --hover: #222222; --mark: #5c4e00; color-scheme: dark; }
 }
 [hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font); }
@@ -54,6 +54,12 @@ nav .empty { color: var(--muted); font-size: 13px; }
 .cal button[aria-current="true"] { background: var(--fg); color: var(--bg); text-decoration: none; }
 
 .filter { color: var(--muted); font-size: 13px; display: flex; gap: 10px; }
+.search { margin-bottom: 16px; }
+.search input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 6px 8px; width: 100%; box-sizing: border-box; border-radius: 0; -webkit-appearance: none; appearance: none; }
+.search input:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
+.found { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+mark { background: var(--mark); color: inherit; }
+@media (max-width: 680px) { .search input { font-size: 16px; padding: 8px 10px; } }
 .filter button { all: unset; cursor: pointer; }
 .filter button:hover { color: var(--fg); text-decoration: underline; }
 .day { font-size: 13px; color: var(--muted); margin: 24px 0 4px; }
@@ -92,6 +98,8 @@ article img { display: block; max-width: 100%; height: auto; margin: 4px 0; }
   </nav>
 
   <main>
+    <div class="search"><input type="search" id="search" placeholder="Search notes" aria-label="Search notes" autocomplete="off"></div>
+    <div class="found" id="found" hidden></div>
     <div class="filter" id="filter" hidden><span id="filter-label"></span><button type="button" id="clear">Show all</button></div>
     <div id="notes"></div>
     <div class="status" id="status">Loading…</div>
@@ -166,7 +174,42 @@ async function load() {
 }
 
 /* ---------- Affichage ---------- */
+/* Recherche : tous les mots doivent apparaître (texte, sujets ou date), sans tenir compte des accents ni des majuscules */
+let query = "";
+const fold = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const words = () => fold(query).split(/\s+/).filter(Boolean);
+function found(n) {
+  const w = words();
+  if (!w.length) return true;
+  const hay = fold(n.text + " " + n.tags.map(t => "#" + t).join(" ") + " " + n.date + " " + dayLabel(n.date));
+  return w.every(x => hay.includes(x));
+}
+function highlight(el) {
+  const w = words().map(x => x.replace(/^#/, "")).filter(Boolean);
+  if (!w.length) return;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const text = node.nodeValue, f = fold(text);   // fold garde la même longueur pour les lettres accentuées courantes
+    if (f.length !== text.length) return;
+    const ranges = [];
+    w.forEach(x => { let i = f.indexOf(x); while (i !== -1) { ranges.push([i, i + x.length]); i = f.indexOf(x, i + x.length); } });
+    if (!ranges.length) return;
+    ranges.sort((a, b) => a[0] - b[0]);
+    const frag = document.createDocumentFragment(); let pos = 0;
+    ranges.forEach(([a, b]) => {
+      if (a < pos) return;
+      frag.append(text.slice(pos, a));
+      const m = document.createElement("mark"); m.textContent = text.slice(a, b); frag.append(m);
+      pos = b;
+    });
+    frag.append(text.slice(pos));
+    node.replaceWith(frag);
+  });
+}
+
 function matches(n) {
+  if (!found(n)) return false;
   if (filter.kind === "month") return n.date.slice(0,7) === filter.value;
   if (filter.kind === "day") return n.date === filter.value;
   if (filter.kind === "tag") return n.tags.includes(filter.value);
@@ -261,7 +304,7 @@ function renderNotes() {
       box.appendChild(h); lastDay = n.date;
     }
     const a = document.createElement("article");
-    const p = document.createElement("p"); p.innerHTML = inline(n.text); a.appendChild(p);
+    const p = document.createElement("p"); p.innerHTML = inline(n.text); highlight(p); a.appendChild(p);
     if (n.tags.length) {
       const meta = document.createElement("div"); meta.className = "meta";
       n.tags.forEach(t => {
@@ -269,17 +312,23 @@ function renderNotes() {
         b.onclick = () => setFilter({ kind:"tag", value:t });
         meta.appendChild(b);
       });
+      highlight(meta);
       a.appendChild(meta);
     }
     box.appendChild(a);
   });
 
-  $("status").textContent = list.length ? "" : notes.length ? "No notes match this filter." : "No notes yet.";
+  $("found").hidden = !query.trim();
+  $("found").textContent = list.length + (list.length === 1 ? " note found" : " notes found");
+  $("status").textContent = list.length ? "" : !notes.length ? "No notes yet."
+    : query.trim() ? "No notes match “" + query.trim() + "”." : "No notes match this filter.";
 }
 
 function render() { renderMenu(); renderCalendar(); renderNotes(); }
 
 $("f-all").onclick = () => setFilter({ kind:"all" });
+$("search").addEventListener("input", e => { query = e.target.value; renderNotes(); });
+$("search").addEventListener("keydown", e => { if (e.key === "Escape") { e.target.value = ""; query = ""; renderNotes(); } });
 $("clear").onclick = () => setFilter({ kind:"all" });
 $("cal-prev").onclick = () => { calMonth = shiftMonth(calMonth, -1); renderCalendar(); };
 $("cal-next").onclick = () => { calMonth = shiftMonth(calMonth, 1); renderCalendar(); };

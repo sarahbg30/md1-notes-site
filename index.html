@@ -40,6 +40,8 @@ nav button[aria-current="true"] { font-weight: 600; }
 button:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
 nav .n { color: var(--muted); font-variant-numeric: tabular-nums; }
 nav .empty { color: var(--muted); font-size: 13px; }
+nav li.cat { font-size: 12px; color: var(--muted); margin: 10px 0 2px; }
+nav li.cat:first-child { margin-top: 0; }
 
 .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
 .cal-head span { font-size: 13px; }
@@ -90,8 +92,6 @@ article img { display: block; max-width: 100%; height: auto; margin: 4px 0; }
       <button type="button" id="cal-next" aria-label="Next month">›</button>
     </div>
     <div class="cal" id="cal"></div>
-    <h2>Dates</h2>
-    <ul id="dates"></ul>
     <h2>Topics</h2>
     <ul id="tags-list"></ul>
     </div>
@@ -160,11 +160,27 @@ function inline(text) {
     .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
 }
 
+/* ---------- Catégories de sujets (categories.md) ----------
+   « ## Nom » = une catégorie ; en dessous, ses sujets avec # */
+let categories = [];   // [{ name, tags: [minuscules] }]
+async function loadCategories() {
+  try {
+    const res = await fetch("categories.md", { cache: "no-store" });
+    if (!res.ok) return [];
+    const src = (await res.text()).replace(/<!--[\s\S]*?-->/g, "");
+    return src.split(/^##[ \t]+/m).slice(1).map(b => {
+      const lines = b.split("\n");
+      return { name: lines.shift().trim(), tags: lines.join(" ").split(/[\s,#]+/).filter(Boolean).map(t => t.toLowerCase()) };
+    }).filter(c => c.name);
+  } catch { return []; }
+}
+
 async function load() {
   try {
     const res = await fetch("notes.md", { cache: "no-store" });
     if (!res.ok) throw new Error();
     notes = parse(await res.text());
+    categories = await loadCategories();
     const latest = notes.map(n => n.date).sort().pop();
     if (latest) calMonth = latest.slice(0,7);
     render();
@@ -240,18 +256,22 @@ function renderMenu() {
   $("count-all").textContent = notes.length;
   $("f-all").setAttribute("aria-current", filter.kind === "all" ? "true" : "false");
 
-  const months = {};
-  notes.forEach(n => { const m = n.date.slice(0,7); months[m] = (months[m] || 0) + 1; });
-  const dl = $("dates"); dl.replaceChildren();
-  Object.keys(months).sort().reverse().forEach(m =>
-    dl.appendChild(li(monthLabel(m), months[m], { kind:"month", value:m }, filter.kind === "month" && filter.value === m)));
-  if (!dl.children.length) dl.innerHTML = '<li class="empty">No dates yet</li>';
-
   const tags = {};
   notes.forEach(n => n.tags.forEach(t => tags[t] = (tags[t] || 0) + 1));
   const tl = $("tags-list"); tl.replaceChildren();
-  Object.keys(tags).sort((a,b) => a.localeCompare(b, "fr")).forEach(t =>
-    tl.appendChild(li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t)));
+  // Sujets groupés par catégorie, dans l'ordre de categories.md ; les autres vont dans « Other »
+  const groups = categories.map(c => ({ name: c.name, items: [] }));
+  let other = groups.find(g => g.name.toLowerCase() === "other");
+  if (!other) { other = { name: "Other", items: [] }; groups.push(other); }
+  Object.keys(tags).sort((a,b) => a.localeCompare(b, "en", { sensitivity: "base" })).forEach(t => {
+    const i = categories.findIndex(c => c.tags.includes(t.toLowerCase()));
+    (i >= 0 ? groups[i] : other).items.push(t);
+  });
+  const shown = groups.filter(g => g.items.length);
+  shown.forEach(g => {
+    if (shown.length > 1) { const h = document.createElement("li"); h.className = "cat"; h.textContent = g.name; tl.appendChild(h); }
+    g.items.forEach(t => tl.appendChild(li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t)));
+  });
   if (!tl.children.length) tl.innerHTML = '<li class="empty">No topics yet</li>';
 }
 

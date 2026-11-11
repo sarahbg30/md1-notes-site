@@ -33,6 +33,11 @@ button.btn:disabled { opacity: .5; cursor: default; }
 button.link { all: unset; cursor: pointer; color: var(--muted); font-size: 13px; }
 button.link:hover { color: var(--fg); text-decoration: underline; }
 .chips { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; }
+.chips .cat { flex-basis: 100%; font-size: 12px; color: var(--fg); margin-top: 6px; }
+.chips .cat:first-child { margin-top: 0; }
+.new-topics { display: grid; gap: 6px; font-size: 13px; }
+.new-topics .nt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.new-topics select { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 3px 6px; }
 .chips button { all: unset; cursor: pointer; color: var(--muted); }
 .chips button:hover { color: var(--fg); text-decoration: underline; }
 .hint { font-size: 13px; color: var(--muted); margin: 0; }
@@ -67,6 +72,7 @@ code { font-size: 13px; }
   button.link, .chips button { padding: 6px 0; }
   header button.link { padding: 0; }
   .chips { gap: 2px 14px; }
+  .new-topics select { font-size: 16px; padding: 6px 8px; }
   .item .acts, .item .confirm, .confirm-save { gap: 6px 20px; }
 }
 </style>
@@ -94,6 +100,7 @@ code { font-size: 13px; }
       <label class="date">Date<input type="date" id="date"></label>
       <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
     </div>
+    <div class="new-topics" id="new-topics" hidden></div>
     <div class="chips" id="known-topics" aria-label="Existing topics"></div>
     <label>Note<textarea id="text" placeholder="Write your note…"></textarea></label>
     <p class="hint">Links: <code>[title](https://…)</code> · italic: <code>*text*</code> · bold: <code>**text**</code> · heading: <code>### text</code></p>
@@ -191,7 +198,7 @@ function makeBlock(date, topics, text) {
 }
 
 /* ---------- Un seul commit : images + notes.md ---------- */
-async function commit(transform, images, message) {
+async function commit(transform, images, message, newTopics = []) {
   const ref = await gh(`/git/ref/heads/${BRANCH}`);
   const head = await gh(`/git/commits/${ref.object.sha}`);
   const file = await gh(`/contents/notes.md?ref=${ref.object.sha}`);
@@ -207,10 +214,18 @@ async function commit(transform, images, message) {
     tree.push({ path: img.path, mode: "100644", type: "blob", sha: blob.sha });
   }
   tree.push({ path: "notes.md", mode: "100644", type: "blob", content: updated });
+  let cats = null;
+  if (newTopics.length) {
+    try { cats = b64decode((await gh(`/contents/categories.md?ref=${ref.object.sha}`)).content); }
+    catch (e) { if (e.status !== 404) throw e; cats = ""; }
+    newTopics.forEach(({ tag, cat }) => { cats = addToCats(cats, cat, tag); });
+    tree.push({ path: "categories.md", mode: "100644", type: "blob", content: cats });
+  }
   const newTree = await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: head.tree.sha, tree }) });
   const c = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] }) });
   await gh(`/git/refs/heads/${BRANCH}`, { method: "PATCH", body: JSON.stringify({ sha: c.sha }) });
-  source = updated; renderList(); renderTopics();
+  source = updated; if (cats !== null) catSource = cats;
+  renderList(); renderTopics();
 }
 
 /* ---------- Clé d'accès ---------- */
@@ -239,11 +254,13 @@ function show() {
 }
 
 /* ---------- Notes publiées (lues directement sur GitHub, toujours à jour) ---------- */
-let source = "";
+let source = "", catSource = "";
 async function loadSource() {
   try {
     const file = await gh(`/contents/notes.md?ref=${BRANCH}`);
     source = b64decode(file.content);
+    try { catSource = b64decode((await gh(`/contents/categories.md?ref=${BRANCH}`)).content); }
+    catch (e) { if (e.status !== 404) throw e; catSource = ""; }
   } catch (e) {
     $("items").innerHTML = ""; const p = document.createElement("p"); p.className = "status error"; p.textContent = explain(e); $("items").appendChild(p);
     return;
@@ -282,23 +299,72 @@ function renderList() {
 }
 function link(label, fn) { const b = document.createElement("button"); b.type = "button"; b.className = "link"; b.textContent = label; b.onclick = fn; return b; }
 
-/* ---------- Sujets existants (évite les doublons) ---------- */
+/* ---------- Catégories (categories.md) : « ## Nom » puis les sujets avec # ---------- */
+const CATEGORY_NAMES = ["People", "Techniques", "Themes", "Media", "Other"];
+function parseCats(src) {
+  return src.replace(/<!--[\s\S]*?-->/g, "").split(/^##[ \t]+/m).slice(1).map(b => {
+    const lines = b.split("\n");
+    return { name: lines.shift().trim(), tags: lines.join(" ").split(/[\s,#]+/).filter(Boolean).map(t => t.toLowerCase()) };
+  }).filter(c => c.name);
+}
+const catNames = () => { const n = parseCats(catSource).map(c => c.name); CATEGORY_NAMES.forEach(x => { if (!n.some(y => y.toLowerCase() === x.toLowerCase())) n.push(x); }); return n; };
+const catOf = t => (parseCats(catSource).find(c => c.tags.includes(t.toLowerCase())) || {}).name || null;
+function addToCats(src, name, tag) {
+  const lines = src.replace(/\s+$/, "").split("\n");
+  const isHead = l => /^##[ \t]+/.test(l);
+  const idx = lines.findIndex(l => isHead(l) && l.replace(/^##[ \t]+/, "").trim().toLowerCase() === name.toLowerCase());
+  if (idx < 0) return (lines.join("\n") ? lines.join("\n") + "\n\n" : "") + `## ${name}\n#${tag}\n`;
+  let end = idx + 1; while (end < lines.length && !isHead(lines[end])) end++;
+  let last = end - 1; while (last > idx && !lines[last].trim()) last--;
+  if (last === idx) lines.splice(idx + 1, 0, "#" + tag); else lines[last] = lines[last].replace(/\s+$/, "") + " #" + tag;
+  return lines.join("\n") + "\n";
+}
+
+/* ---------- Sujets existants, groupés par catégorie (évite les doublons) ---------- */
 let knownTopics = [];
 function renderTopics() {
   const seen = {};
   splitNotes(source).blocks.forEach(raw => readBlock(raw).tags.forEach(t => seen[t.toLowerCase()] ??= t));
   knownTopics = Object.values(seen).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
   const box = $("known-topics"); box.replaceChildren();
-  knownTopics.forEach(t => {
-    const b = document.createElement("button"); b.type = "button"; b.textContent = "#" + t;
-    b.onclick = () => {
-      const cur = parseTopics($("topics").value);
-      if (!cur.some(x => x.toLowerCase() === t.toLowerCase())) $("topics").value = [...cur, t].join(", ");
-      saveDraft();
-    };
-    box.appendChild(b);
+  const names = catNames();
+  names.forEach(name => {
+    const items = knownTopics.filter(t => (catOf(t) || "Other").toLowerCase() === name.toLowerCase());
+    if (!items.length) return;
+    const h = document.createElement("span"); h.className = "cat"; h.textContent = name; box.appendChild(h);
+    items.forEach(t => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = "#" + t;
+      b.onclick = () => {
+        const cur = parseTopics($("topics").value);
+        if (!cur.some(x => x.toLowerCase() === t.toLowerCase())) $("topics").value = [...cur, t].join(", ");
+        saveDraft(); renderNewTopics();
+      };
+      box.appendChild(b);
+    });
+  });
+  renderNewTopics();
+}
+
+/* Nouveaux sujets : choisir leur catégorie avant de publier */
+let newCats = {};   // minuscules -> catégorie choisie
+function newTopicList() {
+  return canonical($("topics").value).filter(t => !catOf(t));
+}
+function renderNewTopics() {
+  const list = newTopicList(), box = $("new-topics");
+  box.replaceChildren(); box.hidden = !list.length;
+  list.forEach(t => {
+    const row = document.createElement("label"); row.className = "nt";
+    const name = document.createElement("span"); name.textContent = "New topic #" + t + " → category";
+    const sel = document.createElement("select");
+    sel.setAttribute("aria-label", "Category for #" + t);
+    catNames().forEach(c => { const o = document.createElement("option"); o.value = o.textContent = c; sel.appendChild(o); });
+    sel.value = newCats[t.toLowerCase()] || "Other";
+    sel.onchange = () => { newCats[t.toLowerCase()] = sel.value; };
+    row.append(name, sel); box.appendChild(row);
   });
 }
+$("topics").addEventListener("input", renderNewTopics);
 const parseTopics = s => s.split(/[\s,#]+/).filter(Boolean);
 const canonical = topics => [...new Set(parseTopics(topics).map(t => knownTopics.find(k => k.toLowerCase() === t.toLowerCase()) || t))];
 
@@ -317,7 +383,7 @@ function startEdit(n) {
   editing = { raw: n.raw, date: n.date };
   confirmDelete = null;
   $("date").value = n.date; $("topics").value = n.tags.join(", "); $("text").value = n.text;
-  pending = []; renderFiles();
+  pending = []; renderFiles(); renderNewTopics();
   $("editing").hidden = false; $("editing-label").textContent = "Editing the note from " + dayLabel(n.date);
   $("publish").textContent = "Save changes"; $("clear").hidden = true;
   setStatus(""); renderList();
@@ -326,7 +392,7 @@ function startEdit(n) {
 function stopEdit() {
   editing = null; askSave(false);
   $("editing").hidden = true; $("publish").textContent = "Publish"; $("clear").hidden = false;
-  pending = []; renderFiles(); loadDraft(); renderList();
+  pending = []; renderFiles(); loadDraft(); renderList(); renderNewTopics();
 }
 $("cancel-edit").onclick = () => { stopEdit(); setStatus(""); };
 
@@ -421,6 +487,7 @@ async function publish() {
   if (!checkForm()) return;
   const date = $("date").value, text = $("text").value.trim();
   const block = makeBlock(date, canonical($("topics").value), text);
+  const newTopics = newTopicList().map(t => ({ tag: t, cat: newCats[t.toLowerCase()] || "Other" }));
   const images = pending.filter(p => text.includes(p.path));
   const firstLine = text.split("\n")[0].replace(/[#*\[\]()!]/g, "").slice(0, 60);
 
@@ -435,13 +502,13 @@ async function publish() {
         if (i < 0) throw Object.assign(new Error("missing"), { code: "missing" });
         s.blocks[i] = block;
         return joinNotes(s);
-      }, images, `Edit note ${date}: ${firstLine}`);
+      }, images, `Edit note ${date}: ${firstLine}`, newTopics);
       stopEdit();
       setStatus("Saved. The site updates in 1–2 minutes.");
     } else {
-      await commit(cur => cur.replace(/\s+$/, "") + "\n\n" + block, images, `Note ${date}: ${firstLine}`);
+      await commit(cur => cur.replace(/\s+$/, "") + "\n\n" + block, images, `Note ${date}: ${firstLine}`, newTopics);
       pending = []; renderFiles();
-      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT);
+      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT); newCats = {}; renderNewTopics();
       setStatus("Published. The site updates in 1–2 minutes.");
     }
   } catch (e) {
@@ -452,7 +519,7 @@ async function publish() {
 
 $("clear").onclick = () => {
   $("text").value = ""; $("topics").value = ""; $("date").value = today();
-  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus("");
+  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus(""); newCats = {}; renderNewTopics();
 };
 
 loadDraft();

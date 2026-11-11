@@ -431,7 +431,7 @@ Finding an animation
 Seeing fucked up things in video games (tortures) Sims
 
 ## 2026-11-04
-#AndreOurednik #conference
+#AndreOurednik #conference #thesis
 
 Elden Ring
 Rely on a common cultural ground

@@ -536,3 +536,21 @@ Ce qui a beaucoup de sens comparé au autres pratiques à mes yeux : les projets
 Le VJing à travers les réseaux sociaux, j'aimerais aussi mener des recherches comme elle sur des sujets assez peu documentés, un peu comme dans mon mémoire sur l'esthétique hyperpop.
 Les axes que j'avais choisi (était surement : 
 Internet aesthetics, retro and minimal games, glitch / Un espace virtuel libre, corps immatériel, la figure de la cyber-girl / Une fête politique, héritage queer,
+
+## 2026-11-11
+#thesis
+
+State of the art
+
+Build the POV and from different fields
+Scientific conferences, products, books, articles, debates, that frame your topic.
+Key definitions, concepts.
+Even if we feel like everything has been already said we can bring our own POV.
+Book, Umberto ECO, How to write a thesis 
+
+Choosing the topic
+We need to narrow it down, create boundaries on the subject we are going to cover.
+Defining 
+Angle : Critical, Representation, Scientific, Historical, Experiential, Speculative
+
+Liminal spaces, degradation,

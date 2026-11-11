@@ -647,6 +647,8 @@ A **poetic and immersive quest**, *Evidence* is an ode to a world without border
 
 Soundwalk Collective is an experimental collective founded by Stephan Crasneanscki in New York in 2000 and joined by Simone Merli in 2008. Their artistic practice combines anthropology, ethnography, non-linear storytelling, psychogeography, observation of nature and experiments with sound recording. Each of their works starts from a specific place, natural or man-made, and requires long periods of research trips and fieldwork.
 
+![Modulo-Pi-en-Evidence-centro-Pompidou](images/2026-11-11-modulo-pi-en-evidence-centro-pompidou-fxhn.jpg)
+
 ## 2026-10-14
 #WendyChun #conference #thesis
 

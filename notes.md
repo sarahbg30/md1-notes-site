@@ -586,3 +586,34 @@ What does it mean to be dignified? Do we really have any power over what becomes
 Is one kind of pain more legitimate than another?
 
 What does society teach us about pain?
+
+## 2026-10-20
+#thesis #LiseMendes #VJing
+
+Can be described as an art form that is both urban and spatial, halfway between scenography and contemporary art
+
+Came about in the 1960s with psychedelic rock
+Liquid Light Show
+
+Turning spectators into participants
+
+VHS video recorder, preview monitor, loops, computer-generated
+
+Blurring the boundary between visual and musical arts
+
+In 1984, one of the first video synthesizers
+
+Today, DJs are closely linked to projection mapping
+
+Concerts now have a double timeframe: the live event, and its circulation online
+
+Book by Laura Glitsos, The camera phone in the concert space: Live music and moving images on the screen
+
+Revolutionary staging at Shea Stadium, 1965
+Projection on a giant screen
+
+And now, audience members filming live on their phones
+
+Hypertextual storytelling: each audience member adds their own footage to a collective, fragmented narrative
+
+The concert becomes a space where a digital memory is produced collectively

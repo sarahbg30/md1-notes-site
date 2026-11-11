@@ -664,7 +664,7 @@ Soundwalk Collective is an experimental collective founded by Stephan Crasneansc
 Conflict can be a good sign
 Groups are so polarized they're no longer talking to each other
 
-## 2026-11-11
+## 2026-11-10
 #GwenolaWagon #video #book #travel
 
 Travel through the [Globodrome](https://d-w.fr/en/projects/globodrome/)

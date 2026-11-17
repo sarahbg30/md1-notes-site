@@ -687,3 +687,10 @@ Designing questions Annexes
 
 [Figma Board](https://www.figma.com/board/NlmLs0hXhmhTVMLA8lv3Ez/designing-questions?node-id=0-1&t=gUN8LbqDs3R9URzM-1)
 [are.na board](https://www.are.na/sarah-courtade/designing-questions-md1)
+
+## 2026-11-11
+#FromPlayToPrevention #Robots #DouglasEdricStanley
+
+Robots = Slaves
+
+Text robots, chat bots

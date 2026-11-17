@@ -11,7 +11,7 @@
 ## People
 #AdamHudec #AndreOurednik #CyprienGaillard #DanielleBrathwaiteShirley #GwenolaWagon
 #JamesBridle #JoelVacheron #LauraFerrarello #LiseMendes #Mariana #MoritzKoenig
-#PattiSmith #RafaëlRozendaal #RifkeSadleir #WendyChun
+#PattiSmith #RafaëlRozendaal #RifkeSadleir #WendyChun #DouglasEdricStanley
 
 ## Techniques
 #CreativeCode #VJing #Live #installation #Website #Figma #DesigningQuestions #Methodology
@@ -23,7 +23,7 @@
 #Ritual #Spaces #y2k #theory #travel
 
 ## Media
-#book #video #music #Games #are.na #board #conference #festivals
+#book #video #music #Games #are.na #board #conference #festivals #Robots
 
 ## Workshops
 #Workshop #FromPlayToPrevention

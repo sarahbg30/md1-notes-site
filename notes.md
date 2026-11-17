@@ -694,3 +694,9 @@ Designing questions Annexes
 Robots = Slaves
 
 Text robots, chat bots
+
+Token = parts of words
+Predicting machines
+
+The latent space of links between words
+Semantic territories = Context

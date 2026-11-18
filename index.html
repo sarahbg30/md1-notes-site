@@ -76,7 +76,8 @@ mark { background: var(--mark); color: inherit; }
 .day { font-size: 13px; color: var(--muted); margin: 24px 0 4px; }
 .day:first-child { margin-top: 0; }
 article { padding: 10px 0; border-bottom: 1px solid var(--line); }
-article p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+article .text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+article .text pre { margin: 4px 0; white-space: pre; overflow-x: auto; line-height: 1.2; }
 article a { color: inherit; text-underline-offset: 2px; }
 article img { display: block; max-width: 100%; height: auto; margin: 4px 0; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 13px; color: var(--muted); }
@@ -157,16 +158,28 @@ function parse(src) {
   return out;
 }
 
-/* Mise en forme simple du texte : ![image](images/photo.jpg), [lien](https://…), **gras**, *italique* */
+/* Mise en forme simple du texte : ![image](images/photo.jpg), [lien](https://…), **gras**, *italique*
+   Le HTML écrit dans la note est gardé tel quel : <pre>…</pre>, <style>…</style>, <b>, <span style="…">… */
 function inline(text) {
   const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  return esc(text.replace(/\n{3,}/g, "\n\n"))
+  const md = s => esc(s)
     .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|[\w-][\w.\/%-]*)\)/g, '<img src="$2" alt="$1" loading="lazy">')
     .replace(/^#{1,6}[ \t]+(.+)$/gm, "<strong>$1</strong>")
     .replace(/\[([^\]]+)\]\(\s*\)/g, "$1")
     .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
     .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+  text = text.replace(/\n{3,}/g, "\n\n");
+  // Blocs gardés tels quels (pas de mise en forme dedans) ; un <pre> sans fin va jusqu'au bout de la note
+  const blockRe = /<(style|pre)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)/gi;
+  // Balises HTML seules ; le texte entre elles reçoit la mise en forme
+  const tagRe = /<\/?[a-zA-Z][\w-]*(?:\s+[^<>]*)?\/?>/g;
+  let out = "", last = 0;
+  const plain = s => { let o = "", l = 0; s.replace(tagRe, (t, i) => { o += md(s.slice(l, i)) + t; l = i + t.length; }); return o + md(s.slice(l)); };
+  text.replace(blockRe, (b, _n, i) => { out += plain(text.slice(last, i)) + b; last = i + b.length; });
+  out += plain(text.slice(last));
+  // Pas de ligne vide en plus autour des blocs
+  return out.replace(/\n*(<\/?(?:style|pre|div|p|ul|ol|li|h[1-6]|table|tr|td|th|hr|br)\b[^>]*>)\n?/gi, "$1");
 }
 
 /* ---------- Catégories de sujets (categories.md) ----------
@@ -207,13 +220,13 @@ const words = () => fold(query).split(/\s+/).filter(Boolean);
 function found(n) {
   const w = words();
   if (!w.length) return true;
-  const hay = fold(n.text + " " + n.tags.map(t => "#" + t).join(" ") + " " + n.date + " " + dayLabel(n.date));
+  const hay = fold(n.text.replace(/<style[\s\S]*?<\/style>|<[^>]+>/gi, " ") + " " + n.tags.map(t => "#" + t).join(" ") + " " + n.date + " " + dayLabel(n.date));
   return w.every(x => hay.includes(x));
 }
 function highlight(el) {
   const w = words().map(x => x.replace(/^#/, "")).filter(Boolean);
   if (!w.length) return;
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: t => t.parentNode.closest("style") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
   const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach(node => {
     const text = node.nodeValue, f = fold(text);   // fold garde la même longueur pour les lettres accentuées courantes
@@ -348,7 +361,7 @@ function renderNotes() {
       box.appendChild(h); lastDay = n.date;
     }
     const a = document.createElement("article");
-    const p = document.createElement("p"); p.innerHTML = inline(n.text); highlight(p); a.appendChild(p);
+    const p = document.createElement("div"); p.className = "text"; p.innerHTML = inline(n.text); highlight(p); a.appendChild(p);
     if (n.tags.length) {
       const meta = document.createElement("div"); meta.className = "meta";
       n.tags.forEach(t => {

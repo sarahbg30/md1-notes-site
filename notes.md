@@ -700,3 +700,21 @@ Predicting machines
 
 The latent space of links between words
 Semantic territories = Context
+
+## 2026-11-17
+#AndreOurednik #conference
+
+The Artefacts of intelligence
+
+AI = classification tool
+
+from where to where
+"all conscioussnes is conscioussnes of something"
+conscioussnes => intent => object
+signifiant et signifié from Saussure
+referent ↰
+                 thought
+symbol  ↲
+
+Language is artificial intelligence working with symbols
+Access complex realities through symbols

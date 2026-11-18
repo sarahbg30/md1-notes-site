@@ -719,6 +719,8 @@ symbol  ↲
 Language is artificial intelligence working with symbols
 Access complex realities through symbols
 
+Encomials: Sonnets from Pentametron is a 2018 algorithmic poetry book by artist and programmer [Ranjit Bhatnagar](https://www.harvestworks.org/artist/ranjit-bhatnagar/)
+
 ## 2026-11-18
 #ascii
 

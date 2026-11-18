@@ -718,3 +718,16 @@ symbol  ↲
 
 Language is artificial intelligence working with symbols
 Access complex realities through symbols
+
+## 2026-11-18
+
+▼                           
+▼                    ┌──┐        ┌──┬─
+     ▼       ▼       │  └──┐    ─┼──┘ 
+        │            └─────┤xxxx │    
+        └─────►             xxxx│     
+│  ┌───────────────────┐      ┌─┤     
+│  │ yes it's me again │     x│ │     
+│  └┬────────┬─────────┘   ───┼─┘     
+    │  ──────┼┬─             x│       
+            ─┘▼  ▼           x

@@ -735,6 +735,7 @@ Access complex realities through symbols
             ─┘▼  ▼           x<pre>
 
 ## 2026-11-18
+#ascii
 
 <style>
 pre {

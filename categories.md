@@ -23,7 +23,7 @@
 #Ritual #Spaces #y2k #theory #travel
 
 ## Media
-#book #video #music #Games #are.na #board #conference #festivals #Robots
+#book #video #music #Games #are.na #board #conference #festivals #Robots #ascii
 
 ## Workshops
 #Workshop #FromPlayToPrevention

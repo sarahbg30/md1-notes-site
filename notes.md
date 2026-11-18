@@ -788,3 +788,12 @@ J     \         /._           /        -tI/ |
         `-.___/   sk
 
 </pre>
+
+## 2026-11-18
+#AndreOurednik #conference
+
+Co occurence matrix
+
+![1_PsinfJ2wfJ7DCijtwv7KVw](images/2026-11-18-1-psinfj2wfj7dcijtwv7kvw-wptv.webp)
+![Khcoder_net_e](images/2026-11-18-khcoder-net-e-6k6y.webp)
+![Keyword-co-occurrence-matrix-This-figure-shows-the-co-occurrence-matrix-of-keywords](images/2026-11-18-keyword-co-occurrence-matrix-this-figure-exeo.webp)

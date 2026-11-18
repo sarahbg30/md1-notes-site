@@ -720,6 +720,7 @@ Language is artificial intelligence working with symbols
 Access complex realities through symbols
 
 ## 2026-11-18
+#ascii
 
 [ASCII tool](https://asciiflow.com/#/)
 

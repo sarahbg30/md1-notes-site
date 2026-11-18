@@ -723,6 +723,8 @@ Encomials: Sonnets from Pentametron is a 2018 algorithmic poetry book by artist 
 
 Using AI is navigating a latent space
 
+![andreourednik](images/2026-11-17-andreourednik-oywu.jpg)
+
 ## 2026-11-18
 #ascii
 

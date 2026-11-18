@@ -721,7 +721,7 @@ Access complex realities through symbols
 
 ## 2026-11-18
 
-▼                           
+<pre>▼                           
 ▼                    ┌──┐        ┌──┬─
      ▼       ▼       │  └──┐    ─┼──┘ 
         │            └─────┤xxxx │    
@@ -730,4 +730,4 @@ Access complex realities through symbols
 │  │ yes it's me again │     x│ │     
 │  └┬────────┬─────────┘   ───┼─┘     
     │  ──────┼┬─             x│       
-            ─┘▼  ▼           x
+            ─┘▼  ▼           x<pre>

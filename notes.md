@@ -721,6 +721,8 @@ Access complex realities through symbols
 
 ## 2026-11-18
 
+[ASCII tool](https://asciiflow.com/#/)
+
 <pre>▼                           
 ▼                    ┌──┐        ┌──┬─
      ▼       ▼       │  └──┐    ─┼──┘ 

@@ -11,7 +11,7 @@
 ## People
 #AdamHudec #AndreOurednik #CyprienGaillard #DanielleBrathwaiteShirley #GwenolaWagon
 #JamesBridle #JoelVacheron #LauraFerrarello #LiseMendes #Mariana #MoritzKoenig
-#PattiSmith #RafaëlRozendaal #RifkeSadleir #WendyChun #DouglasEdricStanley
+#PattiSmith #RafaëlRozendaal #RifkeSadleir #WendyChun #DouglasEdricStanley #MariannaColella
 
 ## Techniques
 #CreativeCode #VJing #Live #installation #Website #Figma #DesigningQuestions #Methodology

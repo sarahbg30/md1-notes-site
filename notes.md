@@ -487,7 +487,7 @@ I also like that it's something we live with and hide as if we were too importan
 A little death, 2002 by Sam Taylor-Johnson
 
 ## 2026-11-09
-#conference #Mariana #FromPlayToPrevention
+#conference #MariannaColella #FromPlayToPrevention
 
 The everyday, ordinary social interactions of teenagers are being impacted by digital technology.
 

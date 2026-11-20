@@ -2,129 +2,185 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#008069">
 <title>Logbook · Write v2</title>
 <style>
 :root {
-  --bg: #ffffff; --fg: #1a1a1a; --muted: #6b6b6b; --line: #e2e2e2; --hover: #f3f3f3; --error: #b3261e;
+  --bg: #efeae2; --panel: #f0f2f5; --bar: #008069; --bar-fg: #ffffff;
+  --bubble: #d9fdd3; --fg: #111b21; --muted: #667781; --pill: #ffffff;
+  --accent: #00a884; --tag: #027eb5; --error: #b3261e; --shadow: 0 1px .5px rgba(11,20,26,.13);
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #161616; --fg: #e8e8e8; --muted: #9a9a9a; --line: #2e2e2e; --hover: #222222; --error: #f2b8b5; color-scheme: dark; }
+  :root {
+    --bg: #0b141a; --panel: #202c33; --bar: #202c33; --bar-fg: #e9edef;
+    --bubble: #005c4b; --fg: #e9edef; --muted: #8696a0; --pill: #2a3942;
+    --tag: #53bdeb; --error: #f2b8b5; color-scheme: dark;
+  }
 }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font); }
-.wrap { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
-header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 20px; }
-h1 { font-size: 18px; font-weight: 600; margin: 0; }
-h2 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; }
-a { color: inherit; text-underline-offset: 2px; }
-.links { display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
-section { display: grid; gap: 10px; }
-label { font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
-input, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 6px 8px; width: 100%; box-sizing: border-box; }
-textarea { min-height: 260px; resize: vertical; }
-input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
-.row { display: flex; gap: 10px; flex-wrap: wrap; }
-.row > label { flex: 1; min-width: 160px; }
-.row > label.date { flex: 0 0 auto; min-width: 0; }
-button.btn { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--fg); padding: 5px 14px; cursor: pointer; }
-button.btn:disabled { opacity: .5; cursor: default; }
-button.link { all: unset; cursor: pointer; color: var(--muted); font-size: 13px; }
-button.link:hover { color: var(--fg); text-decoration: underline; }
-.chips { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; }
-.chips .cat { flex-basis: 100%; font-size: 12px; color: var(--fg); margin-top: 6px; }
-.chips .cat:first-child { margin-top: 0; }
-.new-topics { display: grid; gap: 6px; font-size: 13px; }
-.new-topics .nt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
-.new-topics select { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 3px 6px; }
-.chips button { all: unset; cursor: pointer; color: var(--muted); }
-.chips button:hover { color: var(--fg); text-decoration: underline; }
-.hint { font-size: 13px; color: var(--muted); margin: 0; }
-.files { font-size: 13px; color: var(--muted); display: grid; gap: 2px; }
-.actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.status { font-size: 13px; color: var(--muted); min-height: 1.5em; }
-.status.error { color: var(--error); }
-.editing { font-size: 13px; display: flex; gap: 10px; flex-wrap: wrap; padding: 6px 0; border-bottom: 1px solid var(--line); }
-ol { margin: 0; padding-left: 20px; font-size: 13px; color: var(--muted); }
-code { font-size: 13px; }
-
-#list { margin-top: 40px; gap: 0; }
-#list h2 { margin-bottom: 4px; }
-.item { padding: 10px 0; border-bottom: 1px solid var(--line); display: grid; gap: 4px; min-width: 0; }
-.item.current { opacity: .45; }
-.item .top { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--muted); }
-.item .excerpt { margin: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.item .acts { display: flex; gap: 12px; }
-.item .confirm, .confirm-save { font-size: 13px; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
-.confirm-save span, .item .confirm span { color: var(--fg); }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.4 var(--font); }
 [hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 980px; margin: 0 auto; }
 
-/* Téléphone : champs en 16px (évite le zoom automatique de l'iPhone), boutons plus faciles à toucher */
+/* ---------- En-tête ---------- */
+header { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: calc(8px + env(safe-area-inset-top)); background: var(--bar); color: var(--bar-fg); }
+.back { color: inherit; text-decoration: none; font-size: 28px; line-height: 1; padding: 0 2px 2px; }
+.avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-weight: 600; flex: 0 0 auto; }
+.who { flex: 1; min-width: 0; }
+.who b { display: block; font-size: 16px; font-weight: 600; }
+.who small { display: block; font-size: 12.5px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+header .hbtn { all: unset; cursor: pointer; font-size: 13px; opacity: .85; padding: 6px; }
+header .hbtn:hover { opacity: 1; text-decoration: underline; }
+
+/* ---------- Conversation ---------- */
+main { flex: 1; overflow-y: auto; padding: 8px 6% 10px; display: flex; flex-direction: column; overscroll-behavior: contain; }
+#items { margin-top: auto; display: flex; flex-direction: column; gap: 3px; }
+.sys { align-self: center; max-width: 90%; text-align: center; background: var(--pill); color: var(--muted); font-size: 12.5px; padding: 5px 12px; border-radius: 8px; box-shadow: var(--shadow); margin: 10px 0 6px; }
+.sys a { color: var(--tag); }
+.sys.error { color: var(--error); }
+.bubble { align-self: flex-end; position: relative; max-width: min(85%, 580px); min-width: 90px; background: var(--bubble); border-radius: 8px; padding: 6px 9px 5px; box-shadow: var(--shadow); cursor: pointer; overflow-wrap: anywhere; }
+.bubble.first { border-top-right-radius: 0; margin-top: 4px; }
+.bubble.first::after { content: ""; position: absolute; top: 0; right: -8px; border-top: 10px solid var(--bubble); border-right: 8px solid transparent; }
+.bubble.current { opacity: .5; }
+.tags { font-size: 12.5px; color: var(--tag); margin-bottom: 2px; font-weight: 500; }
+.text { white-space: pre-wrap; }
+.text img { display: block; max-width: 100%; height: auto; border-radius: 6px; margin: 4px 0; }
+.text pre { margin: 4px 0; white-space: pre; overflow-x: auto; line-height: 1.2; }
+.text a { color: var(--tag); }
+.tick { float: right; font-size: 11px; color: var(--muted); margin: 7px 0 -3px 12px; user-select: none; }
+.tick b { color: var(--tag); font-weight: 400; letter-spacing: -3px; margin-left: 3px; }
+.menu { clear: both; display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; border-top: 1px solid rgba(127,127,127,.25); margin-top: 6px; padding-top: 5px; font-size: 13.5px; }
+.menu button { all: unset; cursor: pointer; color: var(--tag); padding: 2px 0; }
+.menu button.danger { color: var(--error); }
+
+/* ---------- Écran privé / clé ---------- */
+.gate { margin: auto; display: grid; gap: 10px; width: min(360px, 100%); }
+.gate input { font: inherit; font-size: 16px; color: var(--fg); background: var(--pill); border: 0; border-radius: 22px; padding: 10px 16px; width: 100%; }
+.gate .send { justify-self: center; width: auto; height: auto; border-radius: 22px; padding: 9px 22px; }
+
+/* ---------- Zone d'écriture ---------- */
+footer { flex: 0 0 auto; background: var(--panel); padding: 6px 8px; padding-bottom: calc(6px + env(safe-area-inset-bottom)); display: grid; gap: 6px; }
+#status { justify-self: center; font-size: 12.5px; color: var(--muted); background: var(--pill); border-radius: 8px; padding: 4px 12px; text-align: center; }
+#status:empty { display: none; }
+#status.error { color: var(--error); }
+.strip { display: flex; align-items: center; gap: 10px; background: var(--pill); border-left: 4px solid var(--accent); border-radius: 8px; padding: 6px 10px; font-size: 13px; }
+.strip span { flex: 1; min-width: 0; }
+.strip button { all: unset; cursor: pointer; color: var(--tag); }
+.strip .x { color: var(--muted); font-size: 18px; line-height: 1; padding: 0 2px; }
+.ctx { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pill { position: relative; display: inline-flex; align-items: center; gap: 4px; background: var(--pill); border: 0; border-radius: 14px; padding: 3px 10px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.pill.tag { color: var(--tag); }
+.pill .x { opacity: .6; }
+.pill input[type=date] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+.thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 0; }
+.thumb { position: relative; flex: 0 0 auto; }
+.thumb img { display: block; width: 58px; height: 58px; object-fit: cover; border-radius: 8px; }
+.thumb button { all: unset; cursor: pointer; position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 50%; background: var(--fg); color: var(--panel); font-size: 13px; line-height: 20px; text-align: center; }
+.bar { display: flex; align-items: flex-end; gap: 6px; }
+.field { flex: 1; min-width: 0; display: flex; align-items: flex-end; background: var(--pill); border-radius: 22px; padding: 2px 4px; }
+.field textarea { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; resize: none; font: inherit; color: var(--fg); padding: 9px 6px; height: 40px; max-height: 40vh; line-height: 1.4; }
+.icon { all: unset; cursor: pointer; flex: 0 0 auto; width: 36px; height: 38px; display: grid; place-items: center; color: var(--muted); font-size: 20px; }
+.icon.on { color: var(--accent); }
+.icon svg, .send svg { width: 22px; height: 22px; fill: currentColor; }
+.send { all: unset; cursor: pointer; flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
+.send:disabled { opacity: .5; cursor: default; }
+.icon:focus-visible, .send:focus-visible, .pill:focus-within, .menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Panneau des sujets (s'ouvre avec #) */
+#panel { background: var(--pill); border-radius: 12px; padding: 10px 12px; max-height: 45vh; overflow-y: auto; display: grid; gap: 10px; font-size: 13px; }
+#panel label { display: grid; gap: 4px; color: var(--muted); }
+#panel input[type=text], #panel select { font: inherit; color: var(--fg); background: var(--panel); border: 0; border-radius: 8px; padding: 7px 10px; width: 100%; }
+#panel select { width: auto; padding: 4px 8px; }
+.new-topics { display: grid; gap: 6px; }
+.new-topics .nt { display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px 10px; color: var(--fg) !important; }
+.chips details { border-top: 1px solid rgba(127,127,127,.2); padding: 6px 0; }
+.chips summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; color: var(--fg); font-weight: 500; }
+.chips summary::-webkit-details-marker { display: none; }
+.chips summary::before { content: "▸"; width: 1.1em; color: var(--muted); }
+.chips details[open] summary::before { content: "▾"; }
+.chips summary span:first-of-type { flex: 1; }
+.chips summary .n { color: var(--muted); font-weight: 400; }
+.chips .list { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 2px; }
+.chips .list button { all: unset; cursor: pointer; background: var(--panel); border-radius: 14px; padding: 3px 10px; color: var(--tag); overflow-wrap: anywhere; }
+.chips .list button.sel { background: var(--accent); color: #fff; }
+.hint { color: var(--muted); margin: 0; }
+.hint code { font-size: 12px; }
+.panel-foot { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.panel-foot button { all: unset; cursor: pointer; color: var(--tag); }
+
 @media (max-width: 680px) {
-  .wrap { padding-top: 16px; }
-  input, textarea { font-size: 16px; padding: 8px 10px; }
-  textarea { min-height: 200px; }
-  .row > label { min-width: 0; flex-basis: 100%; }
-  .row > label.date { flex-basis: 100%; }
-  button.btn { padding: 10px 18px; font-size: 16px; }
-  .actions { gap: 18px; }
-  button.link, .chips button { padding: 6px 0; }
-  header button.link { padding: 0; }
-  .chips { gap: 2px 14px; }
-  .new-topics select { font-size: 16px; padding: 6px 8px; }
-  .item .acts, .item .confirm, .confirm-save { gap: 6px 20px; }
+  main { padding: 6px 10px 10px; }
+  .bubble { max-width: 88%; }
+  .field textarea, #panel input[type=text], #panel select, .gate input { font-size: 16px; }
+  .chips .list button { padding: 5px 12px; }
+  .menu { gap: 4px 24px; }
 }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
   <header>
-    <h1>Logbook · Write v2</h1>
-    <div class="links"><a href="./">View the site</a><button type="button" class="link" id="logout" hidden>Log out</button></div>
+    <a class="back" href="./" aria-label="View the site">‹</a>
+    <div class="avatar" aria-hidden="true">L</div>
+    <div class="who"><b>Logbook</b><small id="sub">Private · only you can write</small></div>
+    <button type="button" class="hbtn" id="logout" hidden>Log out</button>
   </header>
 
-  <!-- Sans clé : simple message. Champ de la clé seulement sur write-v2.html#connect -->
-  <p class="hint" id="private" hidden>This page is private. <a href="./">Read the logbook</a>.</p>
+  <main id="main">
+    <!-- Sans clé : simple message. Champ de la clé seulement sur write-v2.html#connect -->
+    <p class="sys" id="private" hidden>This page is private. <a href="./">Read the logbook</a>.</p>
+    <section class="gate" id="setup" hidden>
+      <input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="Access key  github_pat_…" aria-label="Access key">
+      <button type="button" class="send" id="save-token">Connect</button>
+      <p class="sys error" id="setup-error" hidden></p>
+    </section>
+    <div id="items" hidden></div>
+  </main>
 
-  <section id="setup" hidden>
-    <label>Access key<input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
-    <div class="actions"><button type="button" class="btn" id="save-token">Connect</button></div>
-    <div class="status error" id="setup-error"></div>
-  </section>
+  <footer id="editor" hidden>
+    <div id="status" role="status"></div>
 
-  <!-- Formulaire de note -->
-  <section id="editor" hidden>
-    <div class="editing" id="editing" hidden><span id="editing-label"></span><button type="button" class="link" id="cancel-edit">Cancel editing</button></div>
-    <div class="row">
-      <label class="date">Date<input type="date" id="date"></label>
-      <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
-    </div>
-    <div class="new-topics" id="new-topics" hidden></div>
-    <div class="chips" id="known-topics" aria-label="Existing topics"></div>
-    <label>Note<textarea id="text" placeholder="Write your note…"></textarea></label>
-    <p class="hint">Links: <code>[title](https://…)</code> · italic: <code>*text*</code> · bold: <code>**text**</code> · heading: <code>### text</code></p>
-    <div class="row">
-      <label>Images<input type="file" id="images" accept="image/*" multiple></label>
-    </div>
-    <div class="files" id="files"></div>
-    <div class="actions">
-      <button type="button" class="btn" id="publish">Publish</button>
-      <button type="button" class="link" id="clear">Clear the form</button>
-    </div>
-    <div class="confirm-save" id="confirm-save" hidden>
+    <div class="strip" id="editing" hidden><span id="editing-label"></span><button type="button" class="x" id="cancel-edit" aria-label="Cancel editing">×</button></div>
+    <div class="strip" id="confirm-save" hidden>
       <span>Are you sure you want to save the changes to this note?</span>
-      <button type="button" class="link" id="confirm-yes">Yes, save</button>
-      <button type="button" class="link" id="confirm-no">Cancel</button>
+      <button type="button" id="confirm-yes">Yes, save</button>
+      <button type="button" id="confirm-no">Cancel</button>
     </div>
-    <div class="status" id="status" role="status"></div>
-  </section>
 
-  <!-- Notes publiées -->
-  <section id="list" hidden>
-    <h2>Published notes</h2>
-    <div id="items"><p class="hint">Loading…</p></div>
-  </section>
+    <!-- Sujets, s'ouvre avec le bouton # -->
+    <div id="panel" hidden>
+      <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
+      <div class="new-topics" id="new-topics" hidden></div>
+      <div class="chips" id="known-topics" aria-label="Existing topics"></div>
+      <p class="hint">Links <code>[title](https://…)</code> · italic <code>*text*</code> · bold <code>**text**</code> · heading <code>### text</code> · HTML works too</p>
+      <div class="panel-foot"><button type="button" id="clear">Clear the note</button><button type="button" id="panel-close">Done</button></div>
+    </div>
+
+    <div class="ctx" id="ctx">
+      <label class="pill" title="Date of the note"><span id="date-label">Today</span> ▾<input type="date" id="date" aria-label="Date"></label>
+      <span id="tag-pills" class="ctx"></span>
+    </div>
+    <div class="thumbs" id="files" hidden></div>
+
+    <div class="bar">
+      <div class="field">
+        <button type="button" class="icon" id="topics-btn" aria-label="Topics" title="Topics">#</button>
+        <textarea id="text" rows="1" placeholder="Note"></textarea>
+        <label class="icon" title="Add images" aria-label="Add images">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6v11.5a4 4 0 0 1-8 0V5a2.5 2.5 0 0 1 5 0v10.5a1 1 0 0 1-2 0V6H10v9.5a2.5 2.5 0 0 0 5 0V5a4 4 0 0 0-8 0v12.5a5.5 5.5 0 0 0 11 0V6h-1.5z"/></svg>
+          <input type="file" id="images" accept="image/*" multiple hidden>
+        </label>
+      </div>
+      <button type="button" class="send" id="publish" aria-label="Publish" title="Publish">
+        <svg viewBox="0 0 24 24" aria-hidden="true" id="send-icon"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+      </button>
+    </div>
+  </footer>
 </div>
 
 <script>
@@ -140,6 +196,11 @@ const store = {
 };
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
 const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+const shortDay = ymd => {
+  if (ymd === today()) return "Today";
+  const y = new Date(Date.now() - 864e5); if (ymd === new Date(y - y.getTimezoneOffset()*60000).toISOString().slice(0,10)) return "Yesterday";
+  return new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { day:"numeric", month:"long", year: ymd.slice(0,4) === today().slice(0,4) ? undefined : "numeric" });
+};
 
 function setStatus(msg, isError) { $("status").textContent = msg; $("status").classList.toggle("error", !!isError); }
 
@@ -197,6 +258,26 @@ function makeBlock(date, topics, text) {
   return `## ${date}\n` + (topics.length ? topics.map(t => "#" + t).join(" ") + "\n" : "") + "\n" + text + "\n";
 }
 
+/* Mise en forme comme sur le site : markdown simple + HTML gardé tel quel */
+function inline(text) {
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const md = s => esc(s)
+    .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|[\w-][\w.\/%-]*)\)/g, '<img src="$2" alt="$1" loading="lazy">')
+    .replace(/^#{1,6}[ \t]+(.+)$/gm, "<strong>$1</strong>")
+    .replace(/\[([^\]]+)\]\(\s*\)/g, "$1")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+  text = text.replace(/\n{3,}/g, "\n\n");
+  const blockRe = /<(style|pre)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)/gi;
+  const tagRe = /<\/?[a-zA-Z][\w-]*(?:\s+[^<>]*)?\/?>/g;
+  let out = "", last = 0;
+  const plain = s => { let o = "", l = 0; s.replace(tagRe, (t, i) => { o += md(s.slice(l, i)) + t; l = i + t.length; }); return o + md(s.slice(l)); };
+  text.replace(blockRe, (b, _n, i) => { out += plain(text.slice(last, i)) + b; last = i + b.length; });
+  out += plain(text.slice(last));
+  return out.replace(/\n*(<\/?(?:style|pre|div|p|ul|ol|li|h[1-6]|table|tr|td|th|hr|br)\b[^>]*>)\n?/gi, "$1");
+}
+
 /* ---------- Un seul commit : images + notes.md ---------- */
 async function commit(transform, images, message, newTopics = []) {
   const ref = await gh(`/git/ref/heads/${BRANCH}`);
@@ -233,28 +314,31 @@ $("save-token").onclick = async () => {
   const t = $("token").value.trim();
   if (!t) return;
   store.set(KEY_TOKEN, t);
-  $("save-token").disabled = true; $("setup-error").textContent = "";
+  $("save-token").disabled = true; $("setup-error").hidden = true;
   try {
     await gh("");                 // vérifie que la clé voit le dépôt
     $("token").value = "";
     show();
   } catch (e) {
     store.del(KEY_TOKEN);
+    $("setup-error").hidden = false;
     $("setup-error").textContent = e.status === 401 ? "This key is not valid. Copy it again from GitHub." : "This key can't see md1-notes-site. Check “Only select repositories” → md1-notes-site.";
   }
   $("save-token").disabled = false;
 };
+$("token").addEventListener("keydown", e => { if (e.key === "Enter") $("save-token").click(); });
 $("logout").onclick = () => { store.del(KEY_TOKEN); show(); };
 
 function show() {
   const has = !!store.get(KEY_TOKEN);
   const connect = location.hash === "#connect";
-  $("setup").hidden = has || !connect; $("private").hidden = has || connect; $("editor").hidden = !has; $("list").hidden = !has; $("logout").hidden = !has;
-  if (has) loadSource();
+  $("setup").hidden = has || !connect; $("private").hidden = has || connect;
+  $("editor").hidden = !has; $("items").hidden = !has; $("logout").hidden = !has;
+  if (has) { $("items").replaceChildren(sys("Loading…")); loadSource(); }
 }
 
-/* ---------- Notes publiées (lues directement sur GitHub, toujours à jour) ---------- */
-let source = "", catSource = "";
+/* ---------- Notes publiées = la conversation (lue sur GitHub, toujours à jour) ---------- */
+let source = "", catSource = "", firstLoad = true;
 async function loadSource() {
   try {
     const file = await gh(`/contents/notes.md?ref=${BRANCH}`);
@@ -262,42 +346,62 @@ async function loadSource() {
     try { catSource = b64decode((await gh(`/contents/categories.md?ref=${BRANCH}`)).content); }
     catch (e) { if (e.status !== 404) throw e; catSource = ""; }
   } catch (e) {
-    $("items").innerHTML = ""; const p = document.createElement("p"); p.className = "status error"; p.textContent = explain(e); $("items").appendChild(p);
+    const p = sys(explain(e)); p.classList.add("error"); $("items").replaceChildren(p);
     return;
   }
   renderList(); renderTopics();
 }
+function sys(text) { const p = document.createElement("p"); p.className = "sys"; p.textContent = text; return p; }
+const scrollDown = () => { const m = $("main"); m.scrollTop = m.scrollHeight; };
+// À l'ouverture : rester en bas pendant que les images se chargent (sauf si vous remontez)
+let stick = true;
+["wheel", "touchmove"].forEach(ev => $("main").addEventListener(ev, () => { stick = false; }, { passive: true }));
 
-let confirmDelete = null;   // texte brut de la note à confirmer
+const localImages = new Map();   // images que vous venez d'ajouter : visibles tout de suite
+let openMenu = null, confirmDelete = null;   // texte brut de la note concernée
 function renderList() {
   const box = $("items"); box.replaceChildren();
-  const blocks = splitNotes(source).blocks.map((raw, order) => ({ raw, order, ...readBlock(raw) })).filter(n => n.date);
-  blocks.sort((a, b) => b.date.localeCompare(a.date) || b.order - a.order);
-  if (!blocks.length) { box.innerHTML = '<p class="hint">No notes yet.</p>'; return; }
-  blocks.forEach(n => {
-    const it = document.createElement("div"); it.className = "item";
-    if (editing && editing.raw === n.raw) it.classList.add("current");
-    const top = document.createElement("div"); top.className = "top";
-    const d = document.createElement("span"); d.textContent = dayLabel(n.date); top.appendChild(d);
-    if (n.tags.length) { const t = document.createElement("span"); t.textContent = n.tags.map(x => "#" + x).join(" "); top.appendChild(t); }
-    const ex = document.createElement("p"); ex.className = "excerpt";
-    ex.textContent = n.text.replace(/!\[[^\]]*\]\([^)]*\)/g, "[image]").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*#]/g, "").replace(/\s+/g, " ").trim() || "(empty)";
-    it.append(top, ex);
+  const notes = splitNotes(source).blocks.map((raw, order) => ({ raw, order, ...readBlock(raw) })).filter(n => n.date);
+  notes.sort((a, b) => a.date.localeCompare(b.date) || a.order - b.order);   // la plus récente en bas
+  $("sub").textContent = notes.length + " note" + (notes.length === 1 ? "" : "s") + " · only you can write";
+  if (!notes.length) { box.appendChild(sys("No notes yet. Write the first one below.")); return; }
+  let lastDay = null;
+  notes.forEach(n => {
+    const first = n.date !== lastDay;
+    if (first) { const s = sys(n.date === today() ? "Today" : dayLabel(n.date)); s.classList.add("sep"); box.appendChild(s); lastDay = n.date; }
+    const b = document.createElement("div"); b.className = "bubble" + (first ? " first" : "");
+    if (editing && editing.raw === n.raw) b.classList.add("current");
+    if (n.tags.length) { const t = document.createElement("div"); t.className = "tags"; t.textContent = n.tags.map(x => "#" + x).join(" "); b.appendChild(t); }
+    const tick = document.createElement("span"); tick.className = "tick"; tick.innerHTML = "<b>✓✓</b>";
+    const tx = document.createElement("div"); tx.className = "text"; tx.innerHTML = inline(n.text);
+    tx.querySelectorAll("img").forEach(i => { const l = localImages.get(i.getAttribute("src")); if (l) i.src = l; i.loading = "eager"; i.addEventListener("load", () => { if (stick) scrollDown(); }); });
+    tx.appendChild(tick);
+    b.appendChild(tx);
 
     if (confirmDelete === n.raw) {
-      const c = document.createElement("div"); c.className = "confirm";
-      const q = document.createElement("span"); q.textContent = "Are you sure you want to delete this note?";
-      c.append(q, link("Yes, delete", () => removeNote(n)), link("Cancel", () => { confirmDelete = null; renderList(); }));
-      it.appendChild(c);
-    } else {
-      const a = document.createElement("div"); a.className = "acts";
-      a.append(link("Edit", () => startEdit(n)), link("Delete", () => { confirmDelete = n.raw; renderList(); }));
-      it.appendChild(a);
+      b.appendChild(menu([["Are you sure you want to delete this note?"], ["Yes, delete", () => removeNote(n), "danger"], ["Cancel", () => { confirmDelete = null; renderList(); }]]));
+    } else if (openMenu === n.raw) {
+      b.appendChild(menu([["Edit", () => startEdit(n)], ["Delete", () => { confirmDelete = n.raw; renderList(); }, "danger"]]));
     }
-    box.appendChild(it);
+    // Toucher une note : afficher Edit / Delete
+    b.onclick = e => {
+      if (e.target.closest("a, button, .menu")) return;
+      if (getSelection().toString()) return;
+      openMenu = openMenu === n.raw ? null : n.raw; confirmDelete = null; renderList();
+    };
+    box.appendChild(b);
   });
+  if (firstLoad) { firstLoad = false; requestAnimationFrame(scrollDown); setTimeout(scrollDown, 400); }
 }
-function link(label, fn) { const b = document.createElement("button"); b.type = "button"; b.className = "link"; b.textContent = label; b.onclick = fn; return b; }
+function menu(items) {
+  const m = document.createElement("div"); m.className = "menu";
+  items.forEach(([label, fn, cls]) => {
+    if (!fn) { const s = document.createElement("span"); s.textContent = label; m.appendChild(s); return; }
+    const b = document.createElement("button"); b.type = "button"; b.textContent = label; if (cls) b.className = cls;
+    b.onclick = fn; m.appendChild(b);
+  });
+  return m;
+}
 
 /* ---------- Catégories (categories.md) : « ## Nom » puis les sujets avec # ---------- */
 const CATEGORY_NAMES = ["People", "Techniques", "Themes", "Media", "Other"];
@@ -320,29 +424,58 @@ function addToCats(src, name, tag) {
   return lines.join("\n") + "\n";
 }
 
-/* ---------- Sujets existants, groupés par catégorie (évite les doublons) ---------- */
+/* ---------- Sujets : catégories dépliables, un toucher ajoute ou retire ---------- */
 let knownTopics = [];
+const openCats = new Set();
 function renderTopics() {
   const seen = {};
   splitNotes(source).blocks.forEach(raw => readBlock(raw).tags.forEach(t => seen[t.toLowerCase()] ??= t));
   knownTopics = Object.values(seen).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+  const chosen = new Set(parseTopics($("topics").value).map(t => t.toLowerCase()));
   const box = $("known-topics"); box.replaceChildren();
-  const names = catNames();
-  names.forEach(name => {
+  catNames().forEach(name => {
     const items = knownTopics.filter(t => (catOf(t) || "Other").toLowerCase() === name.toLowerCase());
     if (!items.length) return;
-    const h = document.createElement("span"); h.className = "cat"; h.textContent = name; box.appendChild(h);
+    const d = document.createElement("details");
+    d.open = openCats.has(name);
+    d.ontoggle = () => { d.open ? openCats.add(name) : openCats.delete(name); };
+    const s = document.createElement("summary");
+    const nm = document.createElement("span"); nm.textContent = name;
+    const c = document.createElement("span"); c.className = "n"; c.textContent = items.length;
+    s.append(nm, c);
+    const list = document.createElement("div"); list.className = "list";
     items.forEach(t => {
       const b = document.createElement("button"); b.type = "button"; b.textContent = "#" + t;
-      b.onclick = () => {
-        const cur = parseTopics($("topics").value);
-        if (!cur.some(x => x.toLowerCase() === t.toLowerCase())) $("topics").value = [...cur, t].join(", ");
-        saveDraft(); renderNewTopics();
-      };
-      box.appendChild(b);
+      if (chosen.has(t.toLowerCase())) b.className = "sel";
+      b.onclick = () => toggleTopic(t);
+      list.appendChild(b);
     });
+    d.append(s, list); box.appendChild(d);
   });
-  renderNewTopics();
+  renderNewTopics(); renderPills();
+}
+function toggleTopic(t) {
+  const cur = parseTopics($("topics").value);
+  const has = cur.some(x => x.toLowerCase() === t.toLowerCase());
+  $("topics").value = (has ? cur.filter(x => x.toLowerCase() !== t.toLowerCase()) : [...cur, t]).join(", ");
+  saveDraft(); renderTopics();
+}
+// Sujets choisis, affichés au-dessus du champ
+function renderPills() {
+  const box = $("tag-pills"); box.replaceChildren();
+  const list = canonical($("topics").value);
+  list.forEach(t => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "pill tag";
+    b.innerHTML = ""; b.append("#" + t + " "); const x = document.createElement("span"); x.className = "x"; x.textContent = "×"; b.appendChild(x);
+    b.setAttribute("aria-label", "Remove topic " + t);
+    b.onclick = () => toggleTopic(t);
+    box.appendChild(b);
+  });
+  const add = document.createElement("button"); add.type = "button"; add.className = "pill";
+  add.textContent = list.length ? "+ topic" : "# Add topics";
+  add.onclick = () => setPanel(true);
+  box.appendChild(add);
+  $("topics-btn").classList.toggle("on", list.length > 0);
 }
 
 /* Nouveaux sujets : choisir leur catégorie avant de publier */
@@ -364,40 +497,61 @@ function renderNewTopics() {
     row.append(name, sel); box.appendChild(row);
   });
 }
-$("topics").addEventListener("input", renderNewTopics);
+$("topics").addEventListener("input", () => { renderNewTopics(); renderPills(); });
+$("topics").addEventListener("change", renderTopics);
 const parseTopics = s => s.split(/[\s,#]+/).filter(Boolean);
 const canonical = topics => [...new Set(parseTopics(topics).map(t => knownTopics.find(k => k.toLowerCase() === t.toLowerCase()) || t))];
+
+function setPanel(open) { $("panel").hidden = !open; if (open) renderTopics(); }
+$("topics-btn").onclick = () => setPanel($("panel").hidden);
+$("panel-close").onclick = () => { renderTopics(); setPanel(false); };
+
+/* ---------- Date ---------- */
+function renderDate() { $("date-label").textContent = /^\d{4}-\d{2}-\d{2}$/.test($("date").value) ? shortDay($("date").value) : "Choose a date"; }
+$("date").addEventListener("input", renderDate);
+$("date").addEventListener("change", renderDate);
+
+/* ---------- Champ de texte qui grandit ---------- */
+function grow() { const t = $("text"); t.style.height = "40px"; t.style.height = Math.max(40, Math.min(t.scrollHeight, innerHeight * 0.4)) + "px"; }
+$("text").addEventListener("input", grow);
+// Cmd/Ctrl + Entrée : publier (Entrée seule = nouvelle ligne)
+$("text").addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $("publish").click(); } });
 
 /* ---------- Brouillon (nouvelle note seulement) ---------- */
 function saveDraft() { if (!editing) store.set(KEY_DRAFT, JSON.stringify({ date: $("date").value, topics: $("topics").value, text: $("text").value })); }
 function loadDraft() {
   let d = {}; try { d = JSON.parse(store.get(KEY_DRAFT)) || {}; } catch {}
   $("date").value = d.date || today(); $("topics").value = d.topics || ""; $("text").value = d.text || "";
+  renderDate(); renderPills(); grow();
 }
 ["date", "topics", "text"].forEach(id => $(id).addEventListener("input", saveDraft));
 
 /* ---------- Modifier / supprimer ---------- */
 let editing = null;   // { raw, date }
+const ICON_SEND = '<path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/>';
+const ICON_OK = '<path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>';
 function startEdit(n) {
   saveDraft();                                  // garde le brouillon de nouvelle note de côté
   editing = { raw: n.raw, date: n.date };
-  confirmDelete = null;
+  confirmDelete = null; openMenu = null;
   $("date").value = n.date; $("topics").value = n.tags.join(", "); $("text").value = n.text;
-  pending = []; renderFiles(); renderNewTopics();
-  $("editing").hidden = false; $("editing-label").textContent = "Editing the note from " + dayLabel(n.date);
-  $("publish").textContent = "Save changes"; $("clear").hidden = true;
-  setStatus(""); renderList();
-  window.scrollTo({ top: 0 }); $("text").focus();
+  pending = []; renderFiles(); renderDate(); renderTopics();
+  $("editing").hidden = false; $("editing-label").textContent = "✎ Editing the note from " + dayLabel(n.date);
+  $("send-icon").innerHTML = ICON_OK; $("publish").setAttribute("aria-label", "Save changes"); $("publish").title = "Save changes";
+  $("clear").hidden = true;
+  setStatus(""); renderList(); grow();
+  $("text").focus();
 }
 function stopEdit() {
   editing = null; askSave(false);
-  $("editing").hidden = true; $("publish").textContent = "Publish"; $("clear").hidden = false;
-  pending = []; renderFiles(); loadDraft(); renderList(); renderNewTopics();
+  $("editing").hidden = true; $("clear").hidden = false;
+  $("send-icon").innerHTML = ICON_SEND; $("publish").setAttribute("aria-label", "Publish"); $("publish").title = "Publish";
+  pending = []; renderFiles(); loadDraft(); renderList(); renderTopics();
 }
 $("cancel-edit").onclick = () => { stopEdit(); setStatus(""); };
 
 async function removeNote(n) {
-  confirmDelete = null; renderList();
+  confirmDelete = null; openMenu = null; renderList();
   setStatus("Deleting…");
   try {
     await commit(cur => {
@@ -413,7 +567,7 @@ async function removeNote(n) {
 }
 
 /* ---------- Images ---------- */
-let pending = [];   // { path, blob, name }
+let pending = [];   // { path, blob, name, url }
 const slug = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "image";
 
 async function prepare(file) {
@@ -441,7 +595,9 @@ $("images").onchange = async e => {
     try {
       const { blob, ext } = await prepare(f);
       const path = `images/${$("date").value || today()}-${slug(f.name)}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
-      pending.push({ path, blob, name: f.name });
+      const url = URL.createObjectURL(blob);
+      pending.push({ path, blob, name: f.name, url });
+      localImages.set(path, url);
       insertAtCursor(`![${f.name.replace(/\.[^.]+$/, "").replace(/[\[\]]/g, "")}](${path})`);
       setStatus("");
     } catch {
@@ -456,14 +612,22 @@ function insertAtCursor(line) {
   const ins = (before && !before.endsWith("\n") ? "\n\n" : "") + line + (after.startsWith("\n") ? "" : "\n");
   ta.value = before + ins + after;
   ta.selectionStart = ta.selectionEnd = (before + ins).length;
-  saveDraft();
+  saveDraft(); grow();
 }
+// Miniatures des images ajoutées ; × retire l'image et sa ligne dans le texte
 function renderFiles() {
-  const box = $("files"); box.replaceChildren();
-  pending.forEach(p => {
-    const d = document.createElement("div");
-    d.textContent = `${p.name} → ${p.path} (${Math.round(p.blob.size / 1024)} KB)`;
-    box.appendChild(d);
+  const box = $("files"); box.replaceChildren(); box.hidden = !pending.length;
+  pending.forEach((p, i) => {
+    const d = document.createElement("div"); d.className = "thumb"; d.title = p.name;
+    const img = document.createElement("img"); img.src = p.url; img.alt = p.name;
+    const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Remove " + p.name);
+    x.onclick = () => {
+      pending.splice(i, 1);
+      const esc = p.path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      $("text").value = $("text").value.replace(new RegExp("\\n?!\\[[^\\]]*\\]\\(" + esc + "\\)\\n?"), "\n").replace(/^\n+/, "");
+      saveDraft(); grow(); renderFiles();
+    };
+    d.append(img, x); box.appendChild(d);
   });
 }
 
@@ -474,7 +638,7 @@ function checkForm() {
   return true;
 }
 // Note modifiée : on demande confirmation avant d'enregistrer
-function askSave(open) { $("confirm-save").hidden = !open; $("publish").parentElement.hidden = open; }
+function askSave(open) { $("confirm-save").hidden = !open; $("publish").disabled = open; }
 $("publish").onclick = () => {
   if (!checkForm()) return;
   if (editing) { setStatus(""); askSave(true); return; }
@@ -489,10 +653,10 @@ async function publish() {
   const block = makeBlock(date, canonical($("topics").value), text);
   const newTopics = newTopicList().map(t => ({ tag: t, cat: newCats[t.toLowerCase()] || "Other" }));
   const images = pending.filter(p => text.includes(p.path));
-  const firstLine = text.split("\n")[0].replace(/[#*\[\]()!]/g, "").slice(0, 60);
+  const firstLine = text.split("\n")[0].replace(/[#*\[\]()!<>]/g, "").slice(0, 60);
 
   $("publish").disabled = true;
-  setStatus(editing ? "Saving…" : "Publishing…");
+  setStatus(editing ? "Saving…" : "Sending…");
   try {
     if (editing) {
       const orig = editing.raw;
@@ -508,8 +672,10 @@ async function publish() {
     } else {
       await commit(cur => cur.replace(/\s+$/, "") + "\n\n" + block, images, `Note ${date}: ${firstLine}`, newTopics);
       pending = []; renderFiles();
-      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT); newCats = {}; renderNewTopics();
+      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT); newCats = {};
+      renderDate(); renderTopics(); grow(); setPanel(false);
       setStatus("Published. The site updates in 1–2 minutes.");
+      stick = true; requestAnimationFrame(scrollDown);
     }
   } catch (e) {
     setStatus(explain(e), true);
@@ -519,7 +685,8 @@ async function publish() {
 
 $("clear").onclick = () => {
   $("text").value = ""; $("topics").value = ""; $("date").value = today();
-  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus(""); newCats = {}; renderNewTopics();
+  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus(""); newCats = {};
+  renderDate(); renderTopics(); grow();
 };
 
 loadDraft();

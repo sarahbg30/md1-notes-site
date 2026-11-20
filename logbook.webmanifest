@@ -1,0 +1,13 @@
+{
+  "name": "Logbook",
+  "short_name": "Logbook",
+  "start_url": "write-v2.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#008069",
+  "theme_color": "#008069",
+  "icons": [
+    { "src": "icons/logbook-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icons/logbook-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -4,42 +4,99 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#008069">
+<meta name="theme-color" content="#008069" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#202c33" media="(prefers-color-scheme: dark)">
+<!-- Écran d'accueil de l'iPhone : s'ouvre en plein écran, comme une app -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Logbook">
+<link rel="apple-touch-icon" href="icons/logbook-180.png">
+<link rel="icon" type="image/png" href="icons/logbook-180.png">
+<link rel="manifest" href="logbook.webmanifest">
 <title>Logbook · Write v2</title>
 <style>
 :root {
-  --bg: #efeae2; --panel: #f0f2f5; --bar: #008069; --bar-fg: #ffffff;
-  --bubble: #d9fdd3; --fg: #111b21; --muted: #667781; --pill: #ffffff;
+  --bg: #efeae2; --panel: #f0f2f5; --bar: #008069; --bar-fg: #ffffff; --list: #ffffff;
+  --bubble: #d9fdd3; --fg: #111b21; --muted: #667781; --pill: #ffffff; --line: #e9edef;
   --accent: #00a884; --tag: #027eb5; --error: #b3261e; --shadow: 0 1px .5px rgba(11,20,26,.13);
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b141a; --panel: #202c33; --bar: #202c33; --bar-fg: #e9edef;
-    --bubble: #005c4b; --fg: #e9edef; --muted: #8696a0; --pill: #2a3942;
+    --bg: #0b141a; --panel: #202c33; --bar: #202c33; --bar-fg: #e9edef; --list: #111b21;
+    --bubble: #005c4b; --fg: #e9edef; --muted: #8696a0; --pill: #2a3942; --line: #222d34;
     --tag: #53bdeb; --error: #f2b8b5; color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.4 var(--font); }
+body { margin: 0; background: var(--panel); color: var(--fg); font: 15px/1.4 var(--font); }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; }
-.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 980px; margin: 0 auto; }
+.app { height: 100vh; height: 100dvh; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr; }
+.screen { display: flex; flex-direction: column; min-height: 0; min-width: 0; height: 100vh; height: 100dvh; }
+/* Téléphone : un écran à la fois */
+.app.in-chat #home { display: none; }
+.app:not(.in-chat) #chat { display: none; }
+/* Grand écran : la liste à gauche, la conversation à droite */
+@media (min-width: 900px) {
+  .app { grid-template-columns: minmax(300px, 380px) 1fr; }
+  .app.in-chat #home, .app:not(.in-chat) #chat { display: flex; }
+  #home { border-right: 1px solid var(--line); }
+  #chat .back { display: none; }
+}
 
-/* ---------- En-tête ---------- */
-header { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: calc(8px + env(safe-area-inset-top)); background: var(--bar); color: var(--bar-fg); }
-.back { color: inherit; text-decoration: none; font-size: 28px; line-height: 1; padding: 0 2px 2px; }
-.avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-weight: 600; flex: 0 0 auto; }
+/* ---------- En-têtes ---------- */
+header { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: calc(8px + env(safe-area-inset-top)); background: var(--bar); color: var(--bar-fg); min-height: 56px; }
+header h1 { flex: 1; margin: 0; font-size: 20px; font-weight: 600; }
+.back { all: unset; cursor: pointer; font-size: 28px; line-height: 1; padding: 0 2px 2px; }
 .who { flex: 1; min-width: 0; }
-.who b { display: block; font-size: 16px; font-weight: 600; }
+.who b { display: block; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .who small { display: block; font-size: 12.5px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-header .hbtn { all: unset; cursor: pointer; font-size: 13px; opacity: .85; padding: 6px; }
+header .hbtn { all: unset; cursor: pointer; font-size: 13px; opacity: .85; padding: 6px; color: inherit; text-decoration: none; }
 header .hbtn:hover { opacity: 1; text-decoration: underline; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 14px; color: #fff; flex: 0 0 auto; letter-spacing: .02em; }
+header .avatar { width: 38px; height: 38px; }
+
+/* ---------- Liste des sujets (contacts) ---------- */
+#home { background: var(--list); position: relative; }
+.search { padding: 8px 12px 4px; }
+.search input { width: 100%; font: inherit; color: var(--fg); background: var(--panel); border: 0; border-radius: 20px; padding: 8px 14px; outline: none; }
+.filters { display: flex; gap: 6px; overflow-x: auto; padding: 6px 12px 8px; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.filters button { all: unset; cursor: pointer; flex: 0 0 auto; background: var(--panel); color: var(--muted); border-radius: 16px; padding: 4px 12px; font-size: 13.5px; }
+.filters button.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); font-weight: 500; }
+#contacts { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+.contact { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 12px; }
+.contact:hover, .contact.on { background: var(--panel); }
+.contact .body { flex: 1; min-width: 0; display: grid; gap: 1px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.contact .row1, .contact .row2 { display: flex; gap: 8px; align-items: baseline; }
+.contact .name { flex: 1; min-width: 0; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contact .when { font-size: 12px; color: var(--muted); flex: 0 0 auto; }
+.contact .last { flex: 1; min-width: 0; font-size: 13.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contact .count { flex: 0 0 auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--panel); color: var(--muted); font-size: 11.5px; display: grid; place-items: center; }
+.contact.on .count, .contact:hover .count { background: var(--list); }
+.list-sep { font-size: 12px; color: var(--muted); padding: 12px 16px 4px; text-transform: uppercase; letter-spacing: .05em; }
+.fab { all: unset; cursor: pointer; position: absolute; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 54px; height: 54px; border-radius: 16px; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 28px; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+
+/* Nouveau sujet */
+.sheet { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: grid; place-items: center; padding: 16px; z-index: 10; }
+.sheet form { background: var(--list); border-radius: 14px; padding: 18px; width: min(360px, 100%); display: grid; gap: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
+.sheet h2 { margin: 0; font-size: 17px; font-weight: 600; }
+.sheet label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.sheet input, .sheet select { font: inherit; color: var(--fg); background: var(--panel); border: 0; border-radius: 8px; padding: 9px 12px; }
+.sheet .acts { display: flex; justify-content: flex-end; gap: 18px; align-items: center; }
+.sheet .acts button { all: unset; cursor: pointer; color: var(--accent); font-weight: 500; padding: 4px 0; }
+.sheet .acts button[type=button] { color: var(--muted); font-weight: 400; }
+.sheet .note { font-size: 12.5px; color: var(--muted); margin: 0; }
 
 /* ---------- Conversation ---------- */
+#chat { background: var(--bg); }
 main { flex: 1; overflow-y: auto; padding: 8px 6% 10px; display: flex; flex-direction: column; overscroll-behavior: contain; }
 #items { margin-top: auto; display: flex; flex-direction: column; gap: 3px; }
+.placeholder { margin: auto; text-align: center; color: var(--muted); display: grid; gap: 6px; padding: 24px; }
+.placeholder b { color: var(--fg); font-size: 20px; font-weight: 500; }
 .sys { align-self: center; max-width: 90%; text-align: center; background: var(--pill); color: var(--muted); font-size: 12.5px; padding: 5px 12px; border-radius: 8px; box-shadow: var(--shadow); margin: 10px 0 6px; }
 .sys a { color: var(--tag); }
 .sys.error { color: var(--error); }
@@ -52,16 +109,16 @@ main { flex: 1; overflow-y: auto; padding: 8px 6% 10px; display: flex; flex-dire
 .text img { display: block; max-width: 100%; height: auto; border-radius: 6px; margin: 4px 0; }
 .text pre { margin: 4px 0; white-space: pre; overflow-x: auto; line-height: 1.2; }
 .text a { color: var(--tag); }
-.tick { float: right; font-size: 11px; color: var(--muted); margin: 7px 0 -3px 12px; user-select: none; }
-.tick b { color: var(--tag); font-weight: 400; letter-spacing: -3px; margin-left: 3px; }
+.tick { float: right; font-size: 11px; color: var(--tag); margin: 7px 0 -3px 12px; letter-spacing: -3px; user-select: none; }
 .menu { clear: both; display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; border-top: 1px solid rgba(127,127,127,.25); margin-top: 6px; padding-top: 5px; font-size: 13.5px; }
 .menu button { all: unset; cursor: pointer; color: var(--tag); padding: 2px 0; }
 .menu button.danger { color: var(--error); }
 
 /* ---------- Écran privé / clé ---------- */
-.gate { margin: auto; display: grid; gap: 10px; width: min(360px, 100%); }
-.gate input { font: inherit; font-size: 16px; color: var(--fg); background: var(--pill); border: 0; border-radius: 22px; padding: 10px 16px; width: 100%; }
+.gate { margin: 24px auto; display: grid; gap: 10px; width: min(360px, calc(100% - 32px)); }
+.gate input { font: inherit; font-size: 16px; color: var(--fg); background: var(--panel); border: 0; border-radius: 22px; padding: 10px 16px; width: 100%; }
 .gate .send { justify-self: center; width: auto; height: auto; border-radius: 22px; padding: 9px 22px; }
+.gate .sys { box-shadow: none; }
 
 /* ---------- Zone d'écriture ---------- */
 footer { flex: 0 0 auto; background: var(--panel); padding: 6px 8px; padding-bottom: calc(6px + env(safe-area-inset-bottom)); display: grid; gap: 6px; }
@@ -75,6 +132,7 @@ footer { flex: 0 0 auto; background: var(--panel); padding: 6px 8px; padding-bot
 .ctx { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .pill { position: relative; display: inline-flex; align-items: center; gap: 4px; background: var(--pill); border: 0; border-radius: 14px; padding: 3px 10px; font-size: 13px; color: var(--muted); cursor: pointer; }
 .pill.tag { color: var(--tag); }
+.pill.locked { cursor: default; }
 .pill .x { opacity: .6; }
 .pill input[type=date] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
 .thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 0; }
@@ -89,7 +147,7 @@ footer { flex: 0 0 auto; background: var(--panel); padding: 6px 8px; padding-bot
 .icon svg, .send svg { width: 22px; height: 22px; fill: currentColor; }
 .send { all: unset; cursor: pointer; flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; }
 .send:disabled { opacity: .5; cursor: default; }
-.icon:focus-visible, .send:focus-visible, .pill:focus-within, .menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon:focus-visible, .send:focus-visible, .pill:focus-within, .menu button:focus-visible, .contact:focus-visible, .fab:focus-visible, .filters button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 /* Panneau des sujets (s'ouvre avec #) */
 #panel { background: var(--pill); border-radius: 12px; padding: 10px 12px; max-height: 45vh; overflow-y: auto; display: grid; gap: 10px; font-size: 13px; }
@@ -116,71 +174,103 @@ footer { flex: 0 0 auto; background: var(--panel); padding: 6px 8px; padding-bot
 @media (max-width: 680px) {
   main { padding: 6px 10px 10px; }
   .bubble { max-width: 88%; }
-  .field textarea, #panel input[type=text], #panel select, .gate input { font-size: 16px; }
+  .field textarea, #panel input[type=text], #panel select, .gate input, .search input, .sheet input, .sheet select { font-size: 16px; }
   .chips .list button { padding: 5px 12px; }
   .menu { gap: 4px 24px; }
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <a class="back" href="./" aria-label="View the site">‹</a>
-    <div class="avatar" aria-hidden="true">L</div>
-    <div class="who"><b>Logbook</b><small id="sub">Private · only you can write</small></div>
-    <button type="button" class="hbtn" id="logout" hidden>Log out</button>
-  </header>
+<div class="app" id="app">
 
-  <main id="main">
+  <!-- ===== Liste des sujets ===== -->
+  <section class="screen" id="home">
+    <header>
+      <h1>Logbook</h1>
+      <a class="hbtn" href="./">Site</a>
+      <button type="button" class="hbtn" id="logout" hidden>Log out</button>
+    </header>
+
     <!-- Sans clé : simple message. Champ de la clé seulement sur write-v2.html#connect -->
     <p class="sys" id="private" hidden>This page is private. <a href="./">Read the logbook</a>.</p>
-    <section class="gate" id="setup" hidden>
+    <div class="gate" id="setup" hidden>
       <input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="Access key  github_pat_…" aria-label="Access key">
       <button type="button" class="send" id="save-token">Connect</button>
       <p class="sys error" id="setup-error" hidden></p>
-    </section>
-    <div id="items" hidden></div>
-  </main>
-
-  <footer id="editor" hidden>
-    <div id="status" role="status"></div>
-
-    <div class="strip" id="editing" hidden><span id="editing-label"></span><button type="button" class="x" id="cancel-edit" aria-label="Cancel editing">×</button></div>
-    <div class="strip" id="confirm-save" hidden>
-      <span>Are you sure you want to save the changes to this note?</span>
-      <button type="button" id="confirm-yes">Yes, save</button>
-      <button type="button" id="confirm-no">Cancel</button>
     </div>
 
-    <!-- Sujets, s'ouvre avec le bouton # -->
-    <div id="panel" hidden>
-      <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
-      <div class="new-topics" id="new-topics" hidden></div>
-      <div class="chips" id="known-topics" aria-label="Existing topics"></div>
-      <p class="hint">Links <code>[title](https://…)</code> · italic <code>*text*</code> · bold <code>**text**</code> · heading <code>### text</code> · HTML works too</p>
-      <div class="panel-foot"><button type="button" id="clear">Clear the note</button><button type="button" id="panel-close">Done</button></div>
+    <div id="home-body" hidden style="display:contents">
+      <div class="search"><input type="search" id="search" placeholder="Search topics" autocomplete="off" aria-label="Search topics"></div>
+      <div class="filters" id="filters" role="tablist" aria-label="Categories"></div>
+      <div id="contacts"><p class="sys">Loading…</p></div>
+      <button type="button" class="fab" id="new-chat" aria-label="New topic" title="New topic">+</button>
     </div>
+  </section>
 
-    <div class="ctx" id="ctx">
-      <label class="pill" title="Date of the note"><span id="date-label">Today</span> ▾<input type="date" id="date" aria-label="Date"></label>
-      <span id="tag-pills" class="ctx"></span>
-    </div>
-    <div class="thumbs" id="files" hidden></div>
+  <!-- ===== Conversation d'un sujet ===== -->
+  <section class="screen" id="chat">
+    <header id="chat-head">
+      <button type="button" class="back" id="back" aria-label="Back to topics">‹</button>
+      <div class="avatar" id="chat-avatar" aria-hidden="true"></div>
+      <div class="who"><b id="chat-name"></b><small id="chat-sub"></small></div>
+    </header>
 
-    <div class="bar">
-      <div class="field">
-        <button type="button" class="icon" id="topics-btn" aria-label="Topics" title="Topics">#</button>
-        <textarea id="text" rows="1" placeholder="Note"></textarea>
-        <label class="icon" title="Add images" aria-label="Add images">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6v11.5a4 4 0 0 1-8 0V5a2.5 2.5 0 0 1 5 0v10.5a1 1 0 0 1-2 0V6H10v9.5a2.5 2.5 0 0 0 5 0V5a4 4 0 0 0-8 0v12.5a5.5 5.5 0 0 0 11 0V6h-1.5z"/></svg>
-          <input type="file" id="images" accept="image/*" multiple hidden>
-        </label>
+    <main id="main">
+      <div class="placeholder" id="placeholder"><b>Logbook</b><span>Choose a topic on the left, or start a new one with +.</span></div>
+      <div id="items" hidden></div>
+    </main>
+
+    <footer id="editor" hidden>
+      <div id="status" role="status"></div>
+
+      <div class="strip" id="editing" hidden><span id="editing-label"></span><button type="button" class="x" id="cancel-edit" aria-label="Cancel editing">×</button></div>
+      <div class="strip" id="confirm-save" hidden>
+        <span>Are you sure you want to save the changes to this note?</span>
+        <button type="button" id="confirm-yes">Yes, save</button>
+        <button type="button" id="confirm-no">Cancel</button>
       </div>
-      <button type="button" class="send" id="publish" aria-label="Publish" title="Publish">
-        <svg viewBox="0 0 24 24" aria-hidden="true" id="send-icon"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
-      </button>
-    </div>
-  </footer>
+
+      <!-- Autres sujets, s'ouvre avec le bouton # -->
+      <div id="panel" hidden>
+        <label>Topics<input type="text" id="topics" placeholder="theory, Wendy-Chun" autocomplete="off"></label>
+        <div class="new-topics" id="new-topics" hidden></div>
+        <div class="chips" id="known-topics" aria-label="Existing topics"></div>
+        <p class="hint">Links <code>[title](https://…)</code> · italic <code>*text*</code> · bold <code>**text**</code> · heading <code>### text</code> · HTML works too</p>
+        <div class="panel-foot"><button type="button" id="clear">Clear the note</button><button type="button" id="panel-close">Done</button></div>
+      </div>
+
+      <div class="ctx">
+        <label class="pill" title="Date of the note"><span id="date-label">Today</span> ▾<input type="date" id="date" aria-label="Date"></label>
+        <span id="tag-pills" class="ctx"></span>
+      </div>
+      <div class="thumbs" id="files" hidden></div>
+
+      <div class="bar">
+        <div class="field">
+          <button type="button" class="icon" id="topics-btn" aria-label="More topics" title="More topics">#</button>
+          <textarea id="text" rows="1" placeholder="Message"></textarea>
+          <label class="icon" title="Add images" aria-label="Add images">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6v11.5a4 4 0 0 1-8 0V5a2.5 2.5 0 0 1 5 0v10.5a1 1 0 0 1-2 0V6H10v9.5a2.5 2.5 0 0 0 5 0V5a4 4 0 0 0-8 0v12.5a5.5 5.5 0 0 0 11 0V6h-1.5z"/></svg>
+            <input type="file" id="images" accept="image/*" multiple hidden>
+          </label>
+        </div>
+        <button type="button" class="send" id="publish" aria-label="Publish" title="Publish">
+          <svg viewBox="0 0 24 24" aria-hidden="true" id="send-icon"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+        </button>
+      </div>
+    </footer>
+  </section>
+</div>
+
+<!-- Nouveau sujet -->
+<div class="sheet" id="sheet" hidden>
+  <form id="sheet-form">
+    <h2>New topic</h2>
+    <label>Name<input type="text" id="nt-name" placeholder="WendyChun" autocomplete="off" required></label>
+    <label>Category<select id="nt-cat"></select></label>
+    <p class="note">The topic is created when you send its first note.</p>
+    <div class="acts"><button type="button" id="nt-cancel">Cancel</button><button type="submit">Start</button></div>
+  </form>
 </div>
 
 <script>
@@ -194,12 +284,14 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch {} },
   del(k) { try { localStorage.removeItem(k); } catch {} }
 };
-const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const ymdOf = d => new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+const today = () => ymdOf(new Date());
 const dayLabel = ymd => new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
 const shortDay = ymd => {
   if (ymd === today()) return "Today";
-  const y = new Date(Date.now() - 864e5); if (ymd === new Date(y - y.getTimezoneOffset()*60000).toISOString().slice(0,10)) return "Yesterday";
-  return new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", { day:"numeric", month:"long", year: ymd.slice(0,4) === today().slice(0,4) ? undefined : "numeric" });
+  if (ymd === ymdOf(new Date(Date.now() - 864e5))) return "Yesterday";
+  const same = ymd.slice(0,4) === today().slice(0,4);
+  return new Date(ymd + "T12:00:00").toLocaleDateString("en-GB", same ? { day:"numeric", month:"short" } : { day:"numeric", month:"short", year:"numeric" });
 };
 
 function setStatus(msg, isError) { $("status").textContent = msg; $("status").classList.toggle("error", !!isError); }
@@ -257,6 +349,12 @@ function readBlock(raw) {
 function makeBlock(date, topics, text) {
   return `## ${date}\n` + (topics.length ? topics.map(t => "#" + t).join(" ") + "\n" : "") + "\n" + text + "\n";
 }
+// Toutes les notes, sujets écrits comme la première fois (comme sur le site)
+function allNotes() {
+  const spelling = {};
+  return splitNotes(source).blocks.map((raw, order) => ({ raw, order, ...readBlock(raw) })).filter(n => n.date)
+    .map(n => ({ ...n, tags: [...new Set(n.tags.map(t => spelling[t.toLowerCase()] ??= t))] }));
+}
 
 /* Mise en forme comme sur le site : markdown simple + HTML gardé tel quel */
 function inline(text) {
@@ -277,6 +375,20 @@ function inline(text) {
   out += plain(text.slice(last));
   return out.replace(/\n*(<\/?(?:style|pre|div|p|ul|ol|li|h[1-6]|table|tr|td|th|hr|br)\b[^>]*>)\n?/gi, "$1");
 }
+// Aperçu d'une note sur une ligne (liste des sujets)
+const excerpt = text => text.replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<pre\b[\s\S]*?(?:<\/pre\s*>|$)/gi, " ✎ Drawing ").replace(/<[^>]+>/g, " ")
+  .replace(/(?:\s*!\[[^\]]*\]\([^)]*\))+/g, m => " 📷 " + ((m.match(/!\[/g).length > 1) ? m.match(/!\[/g).length + " photos" : "Photo") + " ").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*#]/g, "").replace(/\s+/g, " ").trim().slice(0, 140) || "…";
+
+/* ---------- Avatars : initiales + couleur propre à chaque sujet ---------- */
+function initials(name) {
+  const w = name.match(/[A-ZÀ-Þ][a-zß-ÿ]*|[a-zß-ÿ]+|\d+/g) || [name];
+  return (w.length > 1 ? w[0][0] + w[1][0] : name.replace(/[^\p{L}\d]/gu, "").slice(0, 2) || "?").toUpperCase();
+}
+function hue(s) { let h = 0; for (const c of s.toLowerCase()) h = (h * 31 + c.codePointAt(0)) % 360; return h; }
+function avatar(el, name, special) {
+  el.textContent = special || initials(name);
+  el.style.background = special ? "var(--accent)" : `hsl(${hue(name)} 38% 46%)`;
+}
 
 /* ---------- Un seul commit : images + notes.md ---------- */
 async function commit(transform, images, message, newTopics = []) {
@@ -286,7 +398,7 @@ async function commit(transform, images, message, newTopics = []) {
   const current = b64decode(file.content);
   let updated;
   try { updated = transform(current); }
-  catch (e) { source = current; renderList(); throw e; }
+  catch (e) { source = current; renderAll(); throw e; }
 
   const tree = [];
   for (const img of images) {
@@ -306,7 +418,7 @@ async function commit(transform, images, message, newTopics = []) {
   const c = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] }) });
   await gh(`/git/refs/heads/${BRANCH}`, { method: "PATCH", body: JSON.stringify({ sha: c.sha }) });
   source = updated; if (cats !== null) catSource = cats;
-  renderList(); renderTopics();
+  renderAll();
 }
 
 /* ---------- Clé d'accès ---------- */
@@ -318,6 +430,7 @@ $("save-token").onclick = async () => {
   try {
     await gh("");                 // vérifie que la clé voit le dépôt
     $("token").value = "";
+    if (location.hash === "#connect") history.replaceState(null, "", location.pathname);
     show();
   } catch (e) {
     store.del(KEY_TOKEN);
@@ -329,16 +442,18 @@ $("save-token").onclick = async () => {
 $("token").addEventListener("keydown", e => { if (e.key === "Enter") $("save-token").click(); });
 $("logout").onclick = () => { store.del(KEY_TOKEN); show(); };
 
+const hasKey = () => !!store.get(KEY_TOKEN);
+// Ouverte depuis l'écran d'accueil : pas de barre d'adresse, donc le champ de la clé s'affiche directement
+const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
 function show() {
-  const has = !!store.get(KEY_TOKEN);
-  const connect = location.hash === "#connect";
+  const has = hasKey(), connect = location.hash === "#connect" || standalone;
   $("setup").hidden = has || !connect; $("private").hidden = has || connect;
-  $("editor").hidden = !has; $("items").hidden = !has; $("logout").hidden = !has;
-  if (has) { $("items").replaceChildren(sys("Loading…")); loadSource(); }
+  $("home-body").hidden = !has; $("logout").hidden = !has;
+  if (has) loadSource(); else route();
 }
 
-/* ---------- Notes publiées = la conversation (lue sur GitHub, toujours à jour) ---------- */
-let source = "", catSource = "", firstLoad = true;
+/* ---------- Notes (lues sur GitHub, toujours à jour) ---------- */
+let source = "", catSource = "", loaded = false;
 async function loadSource() {
   try {
     const file = await gh(`/contents/notes.md?ref=${BRANCH}`);
@@ -346,12 +461,148 @@ async function loadSource() {
     try { catSource = b64decode((await gh(`/contents/categories.md?ref=${BRANCH}`)).content); }
     catch (e) { if (e.status !== 404) throw e; catSource = ""; }
   } catch (e) {
-    const p = sys(explain(e)); p.classList.add("error"); $("items").replaceChildren(p);
+    const p = sys(explain(e)); p.classList.add("error"); $("contacts").replaceChildren(p);
     return;
   }
-  renderList(); renderTopics();
+  loaded = true;
+  route();
 }
 function sys(text) { const p = document.createElement("p"); p.className = "sys"; p.textContent = text; return p; }
+
+/* ---------- Navigation : #topic/Nom, #all, #none, ou la liste ---------- */
+let chat = null;          // null | { kind: "all" } | { kind: "none" } | { kind: "tag", value }
+let fromList = false;     // ouvert depuis la liste : « ‹ » revient en arrière
+const chatKey = c => !c ? "" : c.kind === "tag" ? "topic/" + c.value.toLowerCase() : c.kind;
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  let next = null;
+  if (hasKey() && loaded) {
+    if (h === "all") next = { kind: "all" };
+    else if (h === "none") next = { kind: "none" };
+    else if (h.startsWith("topic/") && h.length > 6) {
+      const name = h.slice(6);
+      next = { kind: "tag", value: knownTopics().find(k => k.toLowerCase() === name.toLowerCase()) || name };
+    }
+  }
+  const changed = chatKey(next) !== chatKey(chat);
+  if (changed) { if (editing) { editing = null; resetEditUI(); } openMenu = confirmDelete = null; setStatus(""); setPanel(false); }
+  chat = next;
+  $("app").classList.toggle("in-chat", !!chat);
+  $("chat-head").hidden = !chat; $("editor").hidden = !chat; $("items").hidden = !chat; $("placeholder").hidden = !!chat;
+  if (changed) { pending = []; renderFiles(); loadDraft(); stick = true; }
+  renderAll();
+  if (changed && chat) { requestAnimationFrame(scrollDown); if (matchMedia("(min-width: 900px)").matches) $("text").focus({ preventScroll: true }); }
+}
+addEventListener("hashchange", () => { if (location.hash === "#connect") show(); else route(); });
+function openChat(hash) { fromList = true; location.hash = hash; }
+$("back").onclick = () => { if (fromList) { fromList = false; history.back(); } else location.hash = ""; };
+
+function renderAll() { if (!loaded) return; renderHome(); if (chat) { renderHead(); renderList(); renderTopics(); } }
+
+/* ---------- Liste des sujets ---------- */
+let catFilter = "All";
+function knownTopics() {
+  const seen = {};
+  splitNotes(source).blocks.forEach(raw => readBlock(raw).tags.forEach(t => seen[t.toLowerCase()] ??= t));
+  return Object.values(seen).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+}
+function renderHome() {
+  const notes = allNotes();
+  const latest = (a, b) => b.date.localeCompare(a.date) || b.order - a.order;
+  const byTag = {};
+  notes.forEach(n => n.tags.forEach(t => (byTag[t] ??= []).push(n)));
+  const topics = Object.keys(byTag).map(t => ({ name: t, notes: byTag[t].sort(latest), cat: catOf(t) || "Other" }));
+  // Sujet en cours de création (pas encore de note)
+  if (chat && chat.kind === "tag" && !byTag[chat.value]) topics.push({ name: chat.value, notes: [], cat: newCats[chat.value.toLowerCase()] || "Other" });
+  topics.sort((a, b) => (b.notes[0]?.date || "9999").localeCompare(a.notes[0]?.date || "9999") || a.name.localeCompare(b.name));
+
+  // Filtres par catégorie
+  const cats = ["All", ...catNames().filter(c => topics.some(t => t.cat.toLowerCase() === c.toLowerCase()))];
+  if (!cats.includes(catFilter)) catFilter = "All";
+  const fb = $("filters"); fb.replaceChildren();
+  cats.forEach(c => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = c; b.setAttribute("role", "tab");
+    b.className = c === catFilter ? "on" : ""; b.setAttribute("aria-selected", c === catFilter);
+    b.onclick = () => { catFilter = c; renderHome(); $("contacts").scrollTop = 0; };
+    fb.appendChild(b);
+  });
+
+  const q = $("search").value.trim().toLowerCase().replace(/^#/, "");
+  const box = $("contacts"); box.replaceChildren();
+  const add = (hash, name, sub, when, count, special, on) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "contact" + (on ? " on" : "");
+    const av = document.createElement("div"); av.className = "avatar"; avatar(av, name, special);
+    const body = document.createElement("div"); body.className = "body";
+    const r1 = document.createElement("div"); r1.className = "row1";
+    const nm = document.createElement("span"); nm.className = "name"; nm.textContent = name;
+    const wh = document.createElement("span"); wh.className = "when"; wh.textContent = when;
+    r1.append(nm, wh);
+    const r2 = document.createElement("div"); r2.className = "row2";
+    const ls = document.createElement("span"); ls.className = "last"; ls.textContent = sub;
+    r2.appendChild(ls);
+    if (count) { const c = document.createElement("span"); c.className = "count"; c.textContent = count; c.title = count + " notes"; r2.appendChild(c); }
+    body.append(r1, r2); b.append(av, body);
+    b.onclick = () => openChat(hash);
+    box.appendChild(b);
+  };
+  if (catFilter === "All" && !q) {
+    const last = [...notes].sort(latest)[0];
+    add("all", "All notes", last ? excerpt(last.text) : "No notes yet", last ? shortDay(last.date) : "", notes.length, "★", chat?.kind === "all");
+    const none = notes.filter(n => !n.tags.length).sort(latest);
+    if (none.length) add("none", "No topic", excerpt(none[0].text), shortDay(none[0].date), none.length, "∅", chat?.kind === "none");
+  }
+  const shown = topics.filter(t => (catFilter === "All" || t.cat.toLowerCase() === catFilter.toLowerCase()) && (!q || t.name.toLowerCase().includes(q)));
+  if (catFilter === "All" && !q && shown.length) { const s = document.createElement("div"); s.className = "list-sep"; s.textContent = "Topics"; box.appendChild(s); }
+  shown.forEach(t => add("topic/" + encodeURIComponent(t.name), t.name,
+    t.notes.length ? excerpt(t.notes[0].text) : "New topic · " + t.cat,
+    t.notes.length ? shortDay(t.notes[0].date) : "", t.notes.length, null,
+    chat?.kind === "tag" && chat.value.toLowerCase() === t.name.toLowerCase()));
+  if (!box.children.length) box.appendChild(sys(q ? "No topic matches “" + q + "”. Create it with +." : "No topics yet."));
+}
+$("search").addEventListener("input", renderHome);
+
+/* ---------- Nouveau sujet ---------- */
+$("new-chat").onclick = () => {
+  const sel = $("nt-cat"); sel.replaceChildren();
+  catNames().forEach(c => { const o = document.createElement("option"); o.value = o.textContent = c; sel.appendChild(o); });
+  sel.value = catFilter !== "All" ? catFilter : "Other";
+  $("nt-name").value = $("search").value.trim().replace(/^#/, "");
+  $("sheet").hidden = false; $("nt-name").focus();
+};
+$("nt-cancel").onclick = () => { $("sheet").hidden = true; };
+$("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").hidden = true; });
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("sheet").hidden) $("sheet").hidden = true; });
+$("sheet-form").onsubmit = e => {
+  e.preventDefault();
+  // « Wendy Chun » devient « WendyChun » (un sujet = un seul mot)
+  const raw = $("nt-name").value.trim().replace(/^#+/, "");
+  const name = raw.split(/[\s,#]+/).filter(Boolean).map((w, i) => i ? w[0].toUpperCase() + w.slice(1) : w).join("");
+  if (!name) return;
+  const existing = knownTopics().find(k => k.toLowerCase() === name.toLowerCase());
+  if (!existing) newCats[name.toLowerCase()] = $("nt-cat").value;
+  $("sheet").hidden = true; $("search").value = "";
+  openChat("topic/" + encodeURIComponent(existing || name));
+};
+
+/* ---------- En-tête de la conversation ---------- */
+function chatNotes() {
+  const notes = allNotes();
+  if (chat.kind === "all") return notes;
+  if (chat.kind === "none") return notes.filter(n => !n.tags.length);
+  return notes.filter(n => n.tags.some(t => t.toLowerCase() === chat.value.toLowerCase()));
+}
+function renderHead() {
+  const n = chatNotes().length, count = n + " note" + (n === 1 ? "" : "s");
+  if (chat.kind === "all") { avatar($("chat-avatar"), "All", "★"); $("chat-name").textContent = "All notes"; $("chat-sub").textContent = count; }
+  else if (chat.kind === "none") { avatar($("chat-avatar"), "None", "∅"); $("chat-name").textContent = "No topic"; $("chat-sub").textContent = count + " without a topic"; }
+  else {
+    avatar($("chat-avatar"), chat.value);
+    $("chat-name").textContent = chat.value;
+    $("chat-sub").textContent = (catOf(chat.value) || newCats[chat.value.toLowerCase()] || "Other") + " · " + (n ? count : "new topic");
+  }
+}
+
+/* ---------- La conversation ---------- */
 const scrollDown = () => { const m = $("main"); m.scrollTop = m.scrollHeight; };
 // À l'ouverture : rester en bas pendant que les images se chargent (sauf si vous remontez)
 let stick = true;
@@ -361,20 +612,26 @@ const localImages = new Map();   // images que vous venez d'ajouter : visibles t
 let openMenu = null, confirmDelete = null;   // texte brut de la note concernée
 function renderList() {
   const box = $("items"); box.replaceChildren();
-  const notes = splitNotes(source).blocks.map((raw, order) => ({ raw, order, ...readBlock(raw) })).filter(n => n.date);
-  notes.sort((a, b) => a.date.localeCompare(b.date) || a.order - b.order);   // la plus récente en bas
-  $("sub").textContent = notes.length + " note" + (notes.length === 1 ? "" : "s") + " · only you can write";
-  if (!notes.length) { box.appendChild(sys("No notes yet. Write the first one below.")); return; }
+  const notes = chatNotes().sort((a, b) => a.date.localeCompare(b.date) || a.order - b.order);   // la plus récente en bas
+  if (!notes.length) {
+    box.appendChild(sys(chat.kind === "tag" ? "No notes about #" + chat.value + " yet. Send the first one below." : "No notes yet."));
+    return;
+  }
+  const self = chat.kind === "tag" ? chat.value.toLowerCase() : null;
   let lastDay = null;
   notes.forEach(n => {
     const first = n.date !== lastDay;
-    if (first) { const s = sys(n.date === today() ? "Today" : dayLabel(n.date)); s.classList.add("sep"); box.appendChild(s); lastDay = n.date; }
+    if (first) { box.appendChild(sys(n.date === today() ? "Today" : dayLabel(n.date))); lastDay = n.date; }
     const b = document.createElement("div"); b.className = "bubble" + (first ? " first" : "");
     if (editing && editing.raw === n.raw) b.classList.add("current");
-    if (n.tags.length) { const t = document.createElement("div"); t.className = "tags"; t.textContent = n.tags.map(x => "#" + x).join(" "); b.appendChild(t); }
-    const tick = document.createElement("span"); tick.className = "tick"; tick.innerHTML = "<b>✓✓</b>";
+    const others = n.tags.filter(t => t.toLowerCase() !== self);   // le sujet de la conversation n'est pas répété
+    if (others.length) { const t = document.createElement("div"); t.className = "tags"; t.textContent = others.map(x => "#" + x).join(" "); b.appendChild(t); }
     const tx = document.createElement("div"); tx.className = "text"; tx.innerHTML = inline(n.text);
-    tx.querySelectorAll("img").forEach(i => { const l = localImages.get(i.getAttribute("src")); if (l) i.src = l; i.loading = "eager"; i.addEventListener("load", () => { if (stick) scrollDown(); }); });
+    tx.querySelectorAll("img").forEach(i => {
+      const l = localImages.get(i.getAttribute("src")); if (l) i.src = l;
+      i.loading = "eager"; i.addEventListener("load", () => { if (stick) scrollDown(); });
+    });
+    const tick = document.createElement("span"); tick.className = "tick"; tick.textContent = "✓✓"; tick.setAttribute("aria-hidden", "true");
     tx.appendChild(tick);
     b.appendChild(tx);
 
@@ -391,7 +648,6 @@ function renderList() {
     };
     box.appendChild(b);
   });
-  if (firstLoad) { firstLoad = false; requestAnimationFrame(scrollDown); setTimeout(scrollDown, 400); }
 }
 function menu(items) {
   const m = document.createElement("div"); m.className = "menu";
@@ -424,17 +680,16 @@ function addToCats(src, name, tag) {
   return lines.join("\n") + "\n";
 }
 
-/* ---------- Sujets : catégories dépliables, un toucher ajoute ou retire ---------- */
-let knownTopics = [];
+/* ---------- Sujets de la note : celui de la conversation + d'autres avec # ---------- */
 const openCats = new Set();
+const locked = () => chat && chat.kind === "tag" ? chat.value : null;
+const isLocked = t => !!locked() && t.toLowerCase() === locked().toLowerCase();
 function renderTopics() {
-  const seen = {};
-  splitNotes(source).blocks.forEach(raw => readBlock(raw).tags.forEach(t => seen[t.toLowerCase()] ??= t));
-  knownTopics = Object.values(seen).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+  const known = knownTopics();
   const chosen = new Set(parseTopics($("topics").value).map(t => t.toLowerCase()));
   const box = $("known-topics"); box.replaceChildren();
   catNames().forEach(name => {
-    const items = knownTopics.filter(t => (catOf(t) || "Other").toLowerCase() === name.toLowerCase());
+    const items = known.filter(t => (catOf(t) || "Other").toLowerCase() === name.toLowerCase() && !isLocked(t));
     if (!items.length) return;
     const d = document.createElement("details");
     d.open = openCats.has(name);
@@ -455,34 +710,39 @@ function renderTopics() {
   renderNewTopics(); renderPills();
 }
 function toggleTopic(t) {
+  if (isLocked(t)) return;
   const cur = parseTopics($("topics").value);
   const has = cur.some(x => x.toLowerCase() === t.toLowerCase());
   $("topics").value = (has ? cur.filter(x => x.toLowerCase() !== t.toLowerCase()) : [...cur, t]).join(", ");
   saveDraft(); renderTopics();
 }
-// Sujets choisis, affichés au-dessus du champ
+// Sujets de la note, affichés au-dessus du champ
 function renderPills() {
   const box = $("tag-pills"); box.replaceChildren();
-  const list = canonical($("topics").value);
+  const list = noteTopics();
   list.forEach(t => {
     const b = document.createElement("button"); b.type = "button"; b.className = "pill tag";
-    b.innerHTML = ""; b.append("#" + t + " "); const x = document.createElement("span"); x.className = "x"; x.textContent = "×"; b.appendChild(x);
-    b.setAttribute("aria-label", "Remove topic " + t);
-    b.onclick = () => toggleTopic(t);
+    b.append("#" + t);
+    if (isLocked(t)) { b.classList.add("locked"); b.title = "Topic of this conversation"; b.disabled = true; }
+    else { const x = document.createElement("span"); x.className = "x"; x.textContent = " ×"; b.appendChild(x); b.setAttribute("aria-label", "Remove topic " + t); b.onclick = () => toggleTopic(t); }
     box.appendChild(b);
   });
   const add = document.createElement("button"); add.type = "button"; add.className = "pill";
   add.textContent = list.length ? "+ topic" : "# Add topics";
   add.onclick = () => setPanel(true);
   box.appendChild(add);
-  $("topics-btn").classList.toggle("on", list.length > 0);
+  $("topics-btn").classList.toggle("on", list.some(t => !isLocked(t)));
+}
+// Sujets de la note à publier : toujours celui de la conversation en premier
+function noteTopics() {
+  const list = canonical($("topics").value);
+  const l = locked();
+  return l ? [l, ...list.filter(t => t.toLowerCase() !== l.toLowerCase())] : list;
 }
 
 /* Nouveaux sujets : choisir leur catégorie avant de publier */
 let newCats = {};   // minuscules -> catégorie choisie
-function newTopicList() {
-  return canonical($("topics").value).filter(t => !catOf(t));
-}
+function newTopicList() { return noteTopics().filter(t => !catOf(t)); }
 function renderNewTopics() {
   const list = newTopicList(), box = $("new-topics");
   box.replaceChildren(); box.hidden = !list.length;
@@ -493,14 +753,14 @@ function renderNewTopics() {
     sel.setAttribute("aria-label", "Category for #" + t);
     catNames().forEach(c => { const o = document.createElement("option"); o.value = o.textContent = c; sel.appendChild(o); });
     sel.value = newCats[t.toLowerCase()] || "Other";
-    sel.onchange = () => { newCats[t.toLowerCase()] = sel.value; };
+    sel.onchange = () => { newCats[t.toLowerCase()] = sel.value; if (isLocked(t)) { renderHead(); renderHome(); } };
     row.append(name, sel); box.appendChild(row);
   });
 }
 $("topics").addEventListener("input", () => { renderNewTopics(); renderPills(); });
 $("topics").addEventListener("change", renderTopics);
 const parseTopics = s => s.split(/[\s,#]+/).filter(Boolean);
-const canonical = topics => [...new Set(parseTopics(topics).map(t => knownTopics.find(k => k.toLowerCase() === t.toLowerCase()) || t))];
+const canonical = topics => { const k = knownTopics(); return [...new Set(parseTopics(topics).map(t => k.find(x => x.toLowerCase() === t.toLowerCase()) || t))]; };
 
 function setPanel(open) { $("panel").hidden = !open; if (open) renderTopics(); }
 $("topics-btn").onclick = () => setPanel($("panel").hidden);
@@ -517,12 +777,13 @@ $("text").addEventListener("input", grow);
 // Cmd/Ctrl + Entrée : publier (Entrée seule = nouvelle ligne)
 $("text").addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $("publish").click(); } });
 
-/* ---------- Brouillon (nouvelle note seulement) ---------- */
-function saveDraft() { if (!editing) store.set(KEY_DRAFT, JSON.stringify({ date: $("date").value, topics: $("topics").value, text: $("text").value })); }
+/* ---------- Brouillon : un par conversation (nouvelle note seulement) ---------- */
+const draftKey = () => KEY_DRAFT + ":" + chatKey(chat);
+function saveDraft() { if (!editing && chat) store.set(draftKey(), JSON.stringify({ date: $("date").value, topics: $("topics").value, text: $("text").value })); }
 function loadDraft() {
-  let d = {}; try { d = JSON.parse(store.get(KEY_DRAFT)) || {}; } catch {}
+  let d = {}; try { d = JSON.parse(store.get(draftKey())) || {}; } catch {}
   $("date").value = d.date || today(); $("topics").value = d.topics || ""; $("text").value = d.text || "";
-  renderDate(); renderPills(); grow();
+  renderDate(); grow();
 }
 ["date", "topics", "text"].forEach(id => $(id).addEventListener("input", saveDraft));
 
@@ -534,7 +795,7 @@ function startEdit(n) {
   saveDraft();                                  // garde le brouillon de nouvelle note de côté
   editing = { raw: n.raw, date: n.date };
   confirmDelete = null; openMenu = null;
-  $("date").value = n.date; $("topics").value = n.tags.join(", "); $("text").value = n.text;
+  $("date").value = n.date; $("topics").value = n.tags.filter(t => !isLocked(t)).join(", "); $("text").value = n.text;
   pending = []; renderFiles(); renderDate(); renderTopics();
   $("editing").hidden = false; $("editing-label").textContent = "✎ Editing the note from " + dayLabel(n.date);
   $("send-icon").innerHTML = ICON_OK; $("publish").setAttribute("aria-label", "Save changes"); $("publish").title = "Save changes";
@@ -542,10 +803,13 @@ function startEdit(n) {
   setStatus(""); renderList(); grow();
   $("text").focus();
 }
-function stopEdit() {
-  editing = null; askSave(false);
+function resetEditUI() {
+  askSave(false);
   $("editing").hidden = true; $("clear").hidden = false;
   $("send-icon").innerHTML = ICON_SEND; $("publish").setAttribute("aria-label", "Publish"); $("publish").title = "Publish";
+}
+function stopEdit() {
+  editing = null; resetEditUI();
   pending = []; renderFiles(); loadDraft(); renderList(); renderTopics();
 }
 $("cancel-edit").onclick = () => { stopEdit(); setStatus(""); };
@@ -650,7 +914,8 @@ $("confirm-no").onclick = () => askSave(false);
 async function publish() {
   if (!checkForm()) return;
   const date = $("date").value, text = $("text").value.trim();
-  const block = makeBlock(date, canonical($("topics").value), text);
+  const topics = noteTopics();
+  const block = makeBlock(date, topics, text);
   const newTopics = newTopicList().map(t => ({ tag: t, cat: newCats[t.toLowerCase()] || "Other" }));
   const images = pending.filter(p => text.includes(p.path));
   const firstLine = text.split("\n")[0].replace(/[#*\[\]()!<>]/g, "").slice(0, 60);
@@ -672,9 +937,9 @@ async function publish() {
     } else {
       await commit(cur => cur.replace(/\s+$/, "") + "\n\n" + block, images, `Note ${date}: ${firstLine}`, newTopics);
       pending = []; renderFiles();
-      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(KEY_DRAFT); newCats = {};
+      $("text").value = ""; $("topics").value = ""; $("date").value = today(); store.del(draftKey());
       renderDate(); renderTopics(); grow(); setPanel(false);
-      setStatus("Published. The site updates in 1–2 minutes.");
+      setStatus("Sent. The site updates in 1–2 minutes.");
       stick = true; requestAnimationFrame(scrollDown);
     }
   } catch (e) {
@@ -685,11 +950,10 @@ async function publish() {
 
 $("clear").onclick = () => {
   $("text").value = ""; $("topics").value = ""; $("date").value = today();
-  pending = []; renderFiles(); store.del(KEY_DRAFT); setStatus(""); newCats = {};
+  pending = []; renderFiles(); store.del(draftKey()); setStatus("");
   renderDate(); renderTopics(); grow();
 };
 
-loadDraft();
 show();
 </script>
 </body>

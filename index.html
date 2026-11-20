@@ -215,12 +215,15 @@ async function load() {
 /* ---------- Affichage ---------- */
 /* Recherche : tous les mots doivent apparaître (texte, sujets ou date), sans tenir compte des accents ni des majuscules */
 let query = "";
+/* Nom affiché d'un sujet : « AndreOurednik » → « Andre Ourednik », « are.na » → « Are.na »
+   (dans notes.md le sujet reste écrit en un seul mot) */
+const pretty = t => t.replace(/(\p{Ll})(\p{Lu})/gu, "$1 $2").replace(/^\p{Ll}/u, c => c.toUpperCase());
 const fold = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const words = () => fold(query).split(/\s+/).filter(Boolean);
 function found(n) {
   const w = words();
   if (!w.length) return true;
-  const hay = fold(n.text.replace(/<style[\s\S]*?<\/style>|<[^>]+>/gi, " ") + " " + n.tags.map(t => "#" + t).join(" ") + " " + n.date + " " + dayLabel(n.date));
+  const hay = fold(n.text.replace(/<style[\s\S]*?<\/style>|<[^>]+>/gi, " ") + " " + n.tags.map(t => "#" + t + " " + pretty(t)).join(" ") + " " + n.date + " " + dayLabel(n.date));
   return w.every(x => hay.includes(x));
 }
 function highlight(el) {
@@ -292,7 +295,7 @@ function renderMenu() {
   });
   const shown = groups.filter(g => g.items.length);
   shown.forEach(g => {
-    const item = t => li(t, tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t);
+    const item = t => li(pretty(t), tags[t], { kind:"tag", value:t }, filter.kind === "tag" && filter.value === t);
     if (shown.length === 1) { g.items.forEach(t => tl.appendChild(item(t))); return; }
     // Une catégorie = un menu déroulant ; celle du sujet choisi reste ouverte
     const active = filter.kind === "tag" && g.items.includes(filter.value);
@@ -351,7 +354,7 @@ function renderNotes() {
   $("filter").hidden = filter.kind === "all";
   $("filter-label").textContent = filter.kind === "month" ? "Notes from " + monthLabel(filter.value)
     : filter.kind === "day" ? "Notes from " + dayLabel(filter.value)
-    : filter.kind === "tag" ? "Topic: " + filter.value : "";
+    : filter.kind === "tag" ? "Topic: " + pretty(filter.value) : "";
   if (filter.kind !== "all") box.style.marginTop = "16px"; else box.style.marginTop = "";
 
   let lastDay = null;
@@ -365,7 +368,7 @@ function renderNotes() {
     if (n.tags.length) {
       const meta = document.createElement("div"); meta.className = "meta";
       n.tags.forEach(t => {
-        const b = document.createElement("button"); b.type = "button"; b.className = "tag"; b.textContent = "#" + t;
+        const b = document.createElement("button"); b.type = "button"; b.className = "tag"; b.textContent = pretty(t);
         b.onclick = () => setFilter({ kind:"tag", value:t });
         meta.appendChild(b);
       });

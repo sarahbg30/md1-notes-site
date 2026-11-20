@@ -399,6 +399,9 @@ const excerpt = text => text.replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<
   .replace(/(?:\s*!\[[^\]]*\]\([^)]*\))+/g, m => " 📷 " + ((m.match(/!\[/g).length > 1) ? m.match(/!\[/g).length + " photos" : "Photo") + " ").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/[*#]/g, "").replace(/\s+/g, " ").trim().slice(0, 140) || "…";
 
 /* ---------- Avatars : initiales + couleur propre à chaque sujet ---------- */
+/* Nom affiché d'un sujet : « AndreOurednik » → « Andre Ourednik », « are.na » → « Are.na »
+   (dans notes.md le sujet reste écrit en un seul mot) */
+const pretty = t => t.replace(/(\p{Ll})(\p{Lu})/gu, "$1 $2").replace(/^\p{Ll}/u, c => c.toUpperCase());
 function initials(name) {
   const w = name.match(/[A-ZÀ-Þ][a-zß-ÿ]*|[a-zß-ÿ]+|\d+/g) || [name];
   return (w.length > 1 ? w[0][0] + w[1][0] : name.replace(/[^\p{L}\d]/gu, "").slice(0, 2) || "?").toUpperCase();
@@ -602,7 +605,7 @@ function renderHome() {
     const av = document.createElement("div"); av.className = "avatar"; avatar(av, name, special, img);
     const body = document.createElement("div"); body.className = "body";
     const r1 = document.createElement("div"); r1.className = "row1";
-    const nm = document.createElement("span"); nm.className = "name"; nm.textContent = name;
+    const nm = document.createElement("span"); nm.className = "name"; nm.textContent = pretty(name);
     const wh = document.createElement("span"); wh.className = "when"; wh.textContent = when;
     r1.append(nm, wh);
     const r2 = document.createElement("div"); r2.className = "row2";
@@ -619,7 +622,7 @@ function renderHome() {
     const none = notes.filter(n => !n.tags.length).sort(latest);
     if (none.length) add("none", "No topic", excerpt(none[0].text), shortDay(none[0].date), none.length, "∅", chat?.kind === "none");
   }
-  const shown = topics.filter(t => (catFilter === "All" || t.cat.toLowerCase() === catFilter.toLowerCase()) && (!q || t.name.toLowerCase().includes(q)));
+  const shown = topics.filter(t => (catFilter === "All" || t.cat.toLowerCase() === catFilter.toLowerCase()) && (!q || t.name.toLowerCase().includes(q) || pretty(t.name).toLowerCase().includes(q)));
   if (catFilter === "All" && !q && shown.length) { const s = document.createElement("div"); s.className = "list-sep"; s.textContent = "Topics"; box.appendChild(s); }
   shown.forEach(t => add("topic/" + encodeURIComponent(t.name), t.name,
     t.notes.length ? excerpt(t.notes[0].text) : "New topic · " + t.cat,
@@ -665,7 +668,7 @@ function renderHead() {
   else if (chat.kind === "none") { avatar($("chat-avatar"), "None", "∅"); $("chat-name").textContent = "No topic"; $("chat-sub").textContent = count + " without a topic"; }
   else {
     avatar($("chat-avatar"), chat.value, null, avatarOf(chat.value, chatNotes()));
-    $("chat-name").textContent = chat.value;
+    $("chat-name").textContent = pretty(chat.value);
     $("chat-sub").textContent = (catOf(chat.value) || newCats[chat.value.toLowerCase()] || "Other") + " · " + (n ? count : "new topic");
   }
 }
@@ -683,7 +686,7 @@ function renderList() {
   const box = $("items"); box.replaceChildren();
   const notes = chatNotes().sort((a, b) => a.date.localeCompare(b.date) || a.order - b.order);   // la plus récente en bas
   if (!notes.length) {
-    box.appendChild(sys(chat.kind === "tag" ? "No notes about #" + chat.value + " yet. Send the first one below." : "No notes yet."));
+    box.appendChild(sys(chat.kind === "tag" ? "No notes about " + pretty(chat.value) + " yet. Send the first one below." : "No notes yet."));
     return;
   }
   const self = chat.kind === "tag" ? chat.value.toLowerCase() : null;
@@ -694,7 +697,7 @@ function renderList() {
     const b = document.createElement("div"); b.className = "bubble" + (first ? " first" : "");
     if (editing && editing.raw === n.raw) b.classList.add("current");
     const others = n.tags.filter(t => t.toLowerCase() !== self);   // le sujet de la conversation n'est pas répété
-    if (others.length) { const t = document.createElement("div"); t.className = "tags"; t.textContent = others.map(x => "#" + x).join(" "); b.appendChild(t); }
+    if (others.length) { const t = document.createElement("div"); t.className = "tags"; t.textContent = others.map(pretty).join(" · "); b.appendChild(t); }
     const tx = document.createElement("div"); tx.className = "text"; tx.innerHTML = inline(n.text);
     const imgs = imagesOf(n.text);
     const chosen = self && openMenu === n.raw && imgs.length ? (imgs.includes(pickedImg) ? pickedImg : imgs[0]) : null;
@@ -783,7 +786,7 @@ function renderTopics() {
     s.append(nm, c);
     const list = document.createElement("div"); list.className = "list";
     items.forEach(t => {
-      const b = document.createElement("button"); b.type = "button"; b.textContent = "#" + t;
+      const b = document.createElement("button"); b.type = "button"; b.textContent = pretty(t);
       if (chosen.has(t.toLowerCase())) b.className = "sel";
       b.onclick = () => toggleTopic(t);
       list.appendChild(b);
@@ -805,7 +808,7 @@ function renderPills() {
   const list = noteTopics();
   list.forEach(t => {
     const b = document.createElement("button"); b.type = "button"; b.className = "pill tag";
-    b.append("#" + t);
+    b.append(pretty(t));
     if (isLocked(t)) { b.classList.add("locked"); b.title = "Topic of this conversation"; b.disabled = true; }
     else { const x = document.createElement("span"); x.className = "x"; x.textContent = " ×"; b.appendChild(x); b.setAttribute("aria-label", "Remove topic " + t); b.onclick = () => toggleTopic(t); }
     box.appendChild(b);
@@ -831,9 +834,9 @@ function renderNewTopics() {
   box.replaceChildren(); box.hidden = !list.length;
   list.forEach(t => {
     const row = document.createElement("label"); row.className = "nt";
-    const name = document.createElement("span"); name.textContent = "New topic #" + t + " → category";
+    const name = document.createElement("span"); name.textContent = "New topic “" + pretty(t) + "” → category";
     const sel = document.createElement("select");
-    sel.setAttribute("aria-label", "Category for #" + t);
+    sel.setAttribute("aria-label", "Category for " + pretty(t));
     catNames().forEach(c => { const o = document.createElement("option"); o.value = o.textContent = c; sel.appendChild(o); });
     sel.value = newCats[t.toLowerCase()] || "Other";
     sel.onchange = () => { newCats[t.toLowerCase()] = sel.value; if (isLocked(t)) { renderHead(); renderHome(); } };
@@ -902,7 +905,7 @@ async function setAvatar(tag, path) {
   setStatus(path ? "Saving the profile picture…" : "Removing the profile picture…");
   try {
     await commit(null, [], (path ? "Profile picture #" : "Remove profile picture #") + tag, [], av => setAvatarLine(av, tag, path));
-    setStatus(path ? "Profile picture saved." : "Removed. The latest image of #" + tag + " is used again.");
+    setStatus(path ? "Profile picture saved." : "Removed. The latest image of " + pretty(tag) + " is used again.");
   } catch (e) { setStatus(explain(e), true); }
 }
 
